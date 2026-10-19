@@ -22,7 +22,7 @@
 
 require_once('alertas.php');
 require('conect.php');
-
+//require('bd.php');
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $buscar = strtoupper(trim($_POST["buscar"] ?? ""));
     $en = false;

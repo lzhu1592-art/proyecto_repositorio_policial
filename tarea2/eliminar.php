@@ -21,7 +21,7 @@
 
 require_once('alertas.php');
 require('conect.php');
-
+//Aqui directamente con la base de datos, no lo hize como si fuera localmente
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $buscar = strtoupper(trim($_POST["buscar"] ?? ""));
     $en = false;
