@@ -3,8 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Gestion</title>
 </head>
+<?php
+session_start();
+
+// Evitar que el navegador guarde la página en caché
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+header("Expires: 0");
+
+// Si falta usuario O contraseña en la sesión, error
+if (!isset($_SESSION["usuario"]) || !isset($_SESSION["contra"])) {
+    header("Location: funciones/login_error.php");
+    exit;
+}
+?>
+
 <body>
     <a href="menu.php">Volver al menu</a>
     <a href="cerrar.php">Cerrar sesion</a>

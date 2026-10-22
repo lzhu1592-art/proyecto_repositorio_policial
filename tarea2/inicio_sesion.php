@@ -25,28 +25,17 @@
 
     <?php
     //Aqui hize usando base de datos con mariadb y localmente
-    require_once('alertas.php');
-    require('conect.php');
-    //require('bd.php');
-    
+    require_once __DIR__ . '/funciones/alertas.php';
+    require_once __DIR__ . '/funciones/conect.php';
+   
+    session_start();
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         #El uso de trim es para evitar espacios innecesarios
         #El uso ?? "" es para poner de predeterminado nada
         $nombre = trim($_POST["nombre"] ?? "");
         $contrasena = $_POST["contrasena"] ?? "";
-/* Aqui como si fuera localmente
-        if (empty($nombre) || empty($contrasena)) {
-            alerta_campo();
-        } elseif (
-            isset($usuarios[$nombre]) &&
-            $usuarios[$nombre]["contrasena"] === $contrasena
-        ) {
-            header("Location: menu.php");
-        } else {
-            echo "Usuario o contraseña incorrectos";
-        }
-            */
+
         $conexion = conectar();
         $query = "SELECT * FROM usuarios WHERE nombre_usuario= ? AND contr=?";
         $stmt = $conexion->prepare($query);
@@ -58,6 +47,9 @@
         } elseif (
             $resultado->num_rows > 0
         ) {
+            
+            $_SESSION["usuario"]=$nombre;
+            $_SESSION["contra"]=$contrasena;
             //Divido las filas en un array en $fila
             $fila = $resultado->fetch_assoc();
             $rol = $fila['rol'];
@@ -76,7 +68,21 @@
         $stmt->close();
         $conexion->close();
     }
-
+    /* Aqui como si fuera localmente
+     // require_once __DIR__ . '/funciones/bd.php';
+        if (empty($nombre) || empty($contrasena)) {
+            alerta_campo();
+        } elseif (
+            isset($usuarios[$nombre]) &&
+            $usuarios[$nombre]["contrasena"] === $contrasena
+        ) {
+            $_SESSION["usuario"]=$nombre;
+            $_SESSION["contra"]=$contrasena;
+            header("Location: menu.php");
+        } else {
+            echo "Usuario o contraseña incorrectos";
+        }
+            */
     ?>
 
 

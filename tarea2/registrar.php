@@ -1,16 +1,26 @@
+<?php
+session_start();
+
+// Evitar que el navegador guarde la página en caché
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+header("Expires: 0");
+
+// Si falta usuario O contraseña en la sesión, error
+if (!isset($_SESSION["usuario"]) || !isset($_SESSION["contra"])) {
+    header("Location: funciones/login_error.php");
+    exit;
+}
+?>
 
 <?php
 session_start();
 
-require_once("bd.php");
-require_once("alertas.php");
-require("conect.php");
-/*
-// Cargar los criminales iniciales al comenzar una sesión
-if (!isset($_SESSION["criminales"])) {
-    $_SESSION["criminales"] = $criminales;
-}
-*/
+//require_once __DIR__ . '/funciones/bd.php';
+require_once __DIR__ . '/funciones/alertas.php';
+require_once __DIR__ . '/funciones/conect.php';
+
 //LLamo a la function cuando necesite algo
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -19,12 +29,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $documento = strtoupper(trim($_POST["documento"] ?? ""));
     $antecedente = trim($_POST["antecedente"] ?? "");
     $descripcion = $_POST["descripcion"] ?? "";
-//El file_put_contents sirve para escribir en un archibo.txt
+    //El file_put_contents sirve para escribir en un archibo.txt
     file_put_contents(
-    "historial.txt",
-    date("H:i") . " registro" . PHP_EOL,
-    FILE_APPEND 
-);
+        "historial.txt",
+        date("H:i") . " registro criminal" . PHP_EOL,
+        FILE_APPEND
+    );
     // Comprobar que todos los campos estén completos
     if (
         $nombre === "" ||
@@ -34,36 +44,44 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     ) {
         alerta_campo();
     } else {
-        $conectar2=conectar();
-        $guardar="INSERT INTO criminales(nombre_criminal,delito,descripcion_delito,documento) 
+        $conectar2 = conectar();
+        $guardar = "INSERT INTO criminales(nombre_criminal,delito,descripcion_delito,documento) 
         VALUES(?,?,?,?)";
-        $stmt=$conectar2->prepare("$guardar");
+        $stmt = $conectar2->prepare("$guardar");
         //Se debe poner el tipo (string, int ) por cada variable        
-        $stmt->bind_param("ssss", $nombre,$antecedente,$descripcion,$documento);
+        $stmt->bind_param("ssss", $nombre, $antecedente, $descripcion, $documento);
         $stmt->execute();
         echo "Datos guardados";
 
         $stmt->close();
         $conectar2->close();
-           /* // Guardar temporalmente en la sesión
-            $_SESSION["criminales"][$nombre] = [
-                "documento" => $documento,
-                "antecedente" => $antecedente,
-                "descripcion" => $descripcion
-            ];
+        /*
+        // Cargar los criminales iniciales al comenzar una sesión
+        Es decir que yo digo que si no existe una sesion de criminales me los creas
+            if (!isset($_SESSION["criminales"])) {
+                $_SESSION["criminales"] = $criminales;
+            }
+        */
+        /* // Guardar temporalmente en la sesión
+        PARA GUARDARLO Y ESCRIBIRLO PERO AL CERRAR SESION SE BORRA TODO
+         $_SESSION["criminales"][$nombre] = [
+             "documento" => $documento,
+             "antecedente" => $antecedente,
+             "descripcion" => $descripcion
+         ];
 */
-           
-           
     }
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <title>Registro de criminales</title>
 </head>
+
 <body>
 
     <h1>Registrar criminal</h1>
@@ -96,37 +114,39 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <hr>
 
     <h2>Criminales registrados</h2>
-<?php
-    $conexion=conectar();
+    <?php
+    $conexion = conectar();
     $query = "SELECT * FROM criminales";
-    $resultado=$conexion->query($query);
-   while($fila=$resultado->fetch_assoc())
-    {
-        echo "Nombre: " .$fila["nombre_criminal"]. "<br>";
-        echo "Documentacion: " .$fila["documento"]. "<br>";
-        echo "Delito: " .$fila["delito"]. "<br>";
-        echo "Descripcion del delito: " .$fila["descripcion_delito"]. "<br><br><br>";
-    };
-?>
-  
-<?php
+    $resultado = $conexion->query($query);
+    while ($fila = $resultado->fetch_assoc()) {
+        echo "Nombre: " . $fila["nombre_criminal"] . "<br>";
+        echo "Documentacion: " . $fila["documento"] . "<br>";
+        echo "Delito: " . $fila["delito"] . "<br>";
+        echo "Descripcion del delito: " . $fila["descripcion_delito"] . "<br><br><br>";
+    }
+    ;
+    ?>
 
-/*
+    <?php
 
-  <?php foreach ($_SESSION["criminales"] as $nombre => $datos): ?>
+    /*
+    Aqui estoy diciendo qu de la session guardada me lo muestre
 
-        <h3><?= htmlspecialchars($nombre) ?></h3>
+      <?php foreach ($_SESSION["criminales"] as $nombre => $datos): ?>
 
-        <p>Documento: <?= htmlspecialchars($datos["documento"]) ?></p>
+            <h3><?= htmlspecialchars($nombre) ?></h3>
 
-        <p>Antecedente: <?= htmlspecialchars($datos["antecedente"]) ?></p>
+            <p>Documento: <?= htmlspecialchars($datos["documento"]) ?></p>
 
-        <p>Descripción: <?= htmlspecialchars($datos["descripcion"]) ?></p>
+            <p>Antecedente: <?= htmlspecialchars($datos["antecedente"]) ?></p>
 
-        <hr>
+            <p>Descripción: <?= htmlspecialchars($datos["descripcion"]) ?></p>
 
-    <?php endforeach; ?>
-*/
-?>
+            <hr>
+
+        <?php endforeach; ?>
+    */
+    ?>
 </body>
+
 </html>

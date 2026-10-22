@@ -1,13 +1,56 @@
-
 <?php
 session_start();
 
-require_once("alertas.php");
-require("conect.php");
+// Evitar que el navegador guarde la página en caché
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+header("Expires: 0");
+
+// Si falta usuario O contraseña en la sesión, error
+if (!isset($_SESSION["usuario"]) || !isset($_SESSION["contra"])) {
+    header("Location: funciones/login_error.php");
+    exit;
+}
+?>
+<?php
+session_start();
+
+require_once __DIR__ . '/funciones/alertas.php';
+require_once __DIR__ . '/funciones/conect.php';
 /*
-// Cargar los criminales iniciales al comenzar una sesión
-if (!isset($_SESSION["criminales"])) {
-    $_SESSION["criminales"] = $criminales;
+// Cargar los usuarios iniciales al comenzar una sesión
+require_once __DIR__ . '/funciones/bd.php';
+if (!isset($_SESSION["usuarios"])) {
+    $_SESSION["usuarios"] = $usuarios;
+}
+    if ($_SERVER["REQUEST_METHOD"] === "POST") {
+
+    $nombre = strtolower(trim($_POST["nombre"] ?? ""));
+    $contr = strtoupper(trim($_POST["contr"] ?? ""));
+    $rol = trim($_POST["rol"] ?? "");
+//El file_put_contents sirve para escribir en un archibo.txt
+    file_put_contents(
+    "historial.txt",
+    date("H:i") . " Crear usuario" . PHP_EOL,
+    FILE_APPEND 
+);
+    // Comprobar que todos los campos estén completos
+    if (
+        $nombre === "" ||
+        $contr === "" ||
+        $rol === ""
+    ) {
+        alerta_campo();
+    }elseif (isset($_SESSION["usuarios"][$nombre])) {
+        echo "<p>Ya existe un usuario con ese nombre.</p>";
+    } else {
+        $_SESSION["usuarios"][$nombre] = [
+            "contr" => $contr,
+            "rol"   => $rol
+        ];
+        echo "<p>Usuario creado correctamente.</p>";
+    }
 }
 */
 //LLamo a la function cuando necesite algo
@@ -46,6 +89,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">

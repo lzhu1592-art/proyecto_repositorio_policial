@@ -18,17 +18,65 @@
 </body>
 
 <?php
+session_start();
 
-require_once('alertas.php');
-require('conect.php');
+// Evitar que el navegador guarde la página en caché
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+header("Expires: 0");
+
+// Si falta usuario O contraseña en la sesión, error
+if (!isset($_SESSION["usuario"]) || !isset($_SESSION["contra"])) {
+    header("Location: funciones/login_error.php");
+    exit;
+}
+?>
+
+<?php
+//Aqui se hace de manera local usando bd.php
+/*
+require_once __DIR__ . '/funciones/alertas.php';
+require_once __DIR__ . '/funciones/bd.php';
+// Cargar los usuarios iniciales al comenzar una sesión
+if (!isset($_SESSION["usuarios"])) {
+    $_SESSION["usuarios"] = $usuarios;
+}
+
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+
+    $nombre = strtolower(trim($_POST["buscar"] ?? ""));
+
+    // Comprobar que se ha elegido un usuario
+    if ($nombre === "") {
+        alerta_campo();
+    } elseif (!isset($_SESSION["usuarios"][$nombre])) {
+        echo "<p>El usuario no existe.</p>";
+    } elseif ($nombre === strtolower($_SESSION["usuario"])) {
+        echo "<p>No puedes eliminar el usuario con el que has iniciado sesión.</p>";
+    } else {
+        unset($_SESSION["usuarios"][$nombre]);
+
+        file_put_contents(
+            __DIR__ . "/historial.txt",
+            date("H:i") . " Eliminar usuario: " . $nombre . PHP_EOL,
+            FILE_APPEND
+        );
+
+        echo "<p>Usuario eliminado correctamente.</p>";
+    }
+}
+*/
+
+require_once __DIR__ . '/funciones/alertas.php';
+require_once __DIR__ . '/funciones/conect.php';
 //Aqui directamente con la base de datos, no lo hize como si fuera localmente
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $buscar = strtoupper(trim($_POST["buscar"] ?? ""));
-    $en = false;
     $conexion = conectar();
     file_put_contents(
         "historial.txt",
-        date("H:i") . " registro" . PHP_EOL,
+        date("H:i") . " eliminar usuario" . PHP_EOL,
         FILE_APPEND | LOCK_EX
     );
     $sql = "DELETE FROM usuarios WHERE id=?";
