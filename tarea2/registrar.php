@@ -15,7 +15,7 @@ if (!isset($_SESSION["usuario"]) || !isset($_SESSION["contra"])) {
 ?>
 
 <?php
-session_start();
+
 
 //require_once __DIR__ . '/funciones/bd.php';
 require_once __DIR__ . '/funciones/alertas.php';
@@ -29,6 +29,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $documento = strtoupper(trim($_POST["documento"] ?? ""));
     $antecedente = trim($_POST["antecedente"] ?? "");
     $descripcion = $_POST["descripcion"] ?? "";
+    if (strlen($documento) != 9 || str_contains($documento, " ")) {
+        formato();
+        exit;
+    }
     //El file_put_contents sirve para escribir en un archibo.txt
     file_put_contents(
         "historial.txt",
@@ -87,7 +91,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <h1>Registrar criminal</h1>
 
     <a href="menu.php">Volver al menú</a>
-    <a href="cerrar.php">Cerrar sesión</a>
+    <a href="funciones/cerrar.php">Cerrar sesion</a>
 
     <form method="POST" action="">
 

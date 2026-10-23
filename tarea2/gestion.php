@@ -1,10 +1,3 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion</title>
-</head>
 <?php
 session_start();
 
@@ -20,10 +13,18 @@ if (!isset($_SESSION["usuario"]) || !isset($_SESSION["contra"])) {
     exit;
 }
 ?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion</title>
+</head>
+
 
 <body>
     <a href="menu.php">Volver al menu</a>
-    <a href="cerrar.php">Cerrar sesion</a>
+    <a href="funciones/cerrar.php">Cerrar sesion</a>
     <div style="background-color:#eef1f5;  border: 1px solid black; >
         <table border="0">
            

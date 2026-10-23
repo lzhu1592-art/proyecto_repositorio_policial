@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-<html lang="es">
 <?php
 session_start();
 
@@ -14,26 +12,6 @@ if (!isset($_SESSION["usuario"]) || !isset($_SESSION["contra"])) {
     header("Location: funciones/login_error.php");
     exit;
 }
-?>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-
-<body>
-    <a href="menu.php">Volver al menu</a>
-    <a href="cerrar.php">Cerrar sesión</a>
-    <form method="POST" action="">
-
-        <h2>Buscar por identificación</h2><br><br>
-        <input type="text" name="buscar"><br>
-        <button type="submit">Buscar</button>
-    </form>
-</body>
-
-<?php
-session_start();
 
 require_once __DIR__ . '/funciones/alertas.php';
 require_once __DIR__ . '/funciones/conect.php';
@@ -86,13 +64,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if ($en === false) {
                 echo "No se ha encontrado la persona";
             }
-
                 */
     }
-
-
 }
-
 ?>
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <a href="menu.php">Volver al menu</a>
+    <a href="funciones/cerrar.php">Cerrar sesion</a>
+    <form method="POST" action="">
+
+        <h2>Buscar por identificación</h2><br><br>
+        <input type="text" name="buscar"><br>
+        <button type="submit">Buscar</button>
+    </form>
+</body>
+
+
 
 </html>

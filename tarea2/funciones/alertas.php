@@ -5,6 +5,10 @@ function alerta_campo(){
         echo "<p style='color:red;'>Debes rellenar todos los campos.</p>";
     
 }
+function formato(){
+
+    echo "<p style='color:red;'>Formato no valido.</p>";
+}
 
 
 

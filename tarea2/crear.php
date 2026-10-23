@@ -12,9 +12,6 @@ if (!isset($_SESSION["usuario"]) || !isset($_SESSION["contra"])) {
     header("Location: funciones/login_error.php");
     exit;
 }
-?>
-<?php
-session_start();
 
 require_once __DIR__ . '/funciones/alertas.php';
 require_once __DIR__ . '/funciones/conect.php';
@@ -73,7 +70,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $rol === ""
     ) {
         alerta_campo();
-    } else {
+    }elseif(
+        strlen($nombre) != 3 || strlen($contr) < 5 || !str_contains($rol, "invitado") && !str_contains($rol, "administrador") && !str_contains($rol, "policia") 
+    ){      
+        formato();
+        exit;
+    }else {
         $conectar2=conectar();
         $guardar="INSERT INTO usuarios(nombre_usuario,contr,rol) 
         VALUES(?,?,?)";
@@ -95,7 +97,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Registro de criminales</title>
+    <title>Crear usuarios</title>
 </head>
 <body>
 

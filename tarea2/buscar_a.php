@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-<html lang="es">
 <?php
 session_start();
 
@@ -14,32 +12,7 @@ if (!isset($_SESSION["usuario"]) || !isset($_SESSION["contra"])) {
     header("Location: login_error.php");
     exit;
 }
-?>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
 
-<body>
-    <a href="menu.php">Volver al menu</a>
-
-    <form method="POST" action="">
-
-        <h2>Buscar por ID/Nombre</h2><br><br>
-        <input type="text" name="buscar"><br>
-        <button type="submit">Buscar</button>
-    </form>
-</body>
-
-
-
-<?php
-/*
-session_start();
-if (!isset($_SESSION["usuario"]) && $_SESSION["contra"]){
-    header("Location:login_error.php");
-}
 require_once __DIR__ . '/funciones/alertas.php';
 require_once __DIR__ . '/funciones/bd.php';
 
@@ -76,14 +49,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
 }
-    */
-?>
-
-<?php
+    
+/*
 //Aqui lo hare usando de base de datos el bd.php
-if (!isset($_SESSION["usuario"]) && $_SESSION["contra"]){
-    header("Location: funciones/login_error.php");
-}
+
 require_once __DIR__ . '/funciones/alertas.php';
 require_once __DIR__ . '/funciones/bd.php';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -102,8 +71,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
          ];
 
 }
-?>
-<?php foreach ($_SESSION["usuarios"] as $nombre => $datos): ?>
+         <?php foreach ($_SESSION["usuarios"] as $nombre => $datos): ?>
 
             <h3><?= htmlspecialchars($nombre) ?></h3>
 
@@ -114,5 +82,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <hr>
 
         <?php endforeach; ?>
+
+         */
+?>
+
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <a href="menu.php">Volver al menu</a>
+
+    <form method="POST" action="">
+
+        <h2>Buscar por ID/Nombre</h2><br><br>
+        <input type="text" name="buscar"><br>
+        <button type="submit">Buscar</button>
+    </form>
+</body>
+
+
+
 
 </html>

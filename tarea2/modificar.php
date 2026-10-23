@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-<html lang="es">
 <?php
 session_start();
 
@@ -14,31 +12,7 @@ if (!isset($_SESSION["usuario"]) || !isset($_SESSION["contra"])) {
     header("Location: funciones/login_error.php");
     exit;
 }
-?>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modificar usuario</title>
-</head>
 
-<body>
-    <a href="menu.php">Volver al menu</a>
-    
-    <form method="POST" action="">
-
-        <h2>Buscar por identificación o nombre</h2><br><br>
-        <input type="text" name="buscar" required><br>
-        <h2>Cambiar nombre </h2><br><br>
-        <input type="text" name="nombre" required><br>
-        <h2>Cambiar contraseña</h2><br><br>
-        <input type="text" name="contr" required><br>
-        <h2>Cambiar rol</h2><br><br>
-        <input type="text" name="rol" required><br>
-        <button type="submit">Buscar</button>
-    </form>
-</body>
-
-<?php
 /*
 Aqui lo hare usando bd.php como base de datos
 session_start();
@@ -68,12 +42,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "Usuario modificado";
     );
     }
-       
-    
-
 
 */
-session_start();
+
 require_once __DIR__ . '/funciones/alertas.php';
 require_once __DIR__ . '/funciones/conect.php';
 
@@ -101,9 +72,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
        
     }
 
-
-
-
 ?>
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modificar usuario</title>
+</head>
+
+<body>
+    <a href="menu.php">Volver al menu</a>
+    
+    <form method="POST" action="">
+
+        <h2>Buscar por identificación o nombre</h2><br><br>
+        <input type="text" name="buscar" required><br>
+        <h2>Cambiar nombre </h2><br><br>
+        <input type="text" name="nombre" required><br>
+        <h2>Cambiar contraseña</h2><br><br>
+        <input type="text" name="contr" required><br>
+        <h2>Cambiar rol</h2><br><br>
+        <input type="text" name="rol" required><br>
+        <button type="submit">Buscar</button>
+    </form>
+</body>
+
+
 
 </html>

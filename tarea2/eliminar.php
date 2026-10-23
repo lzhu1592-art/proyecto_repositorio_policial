@@ -1,22 +1,3 @@
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-
-<body>
-    <a href="menu.php">Volver al menu</a>
-    <form method="POST" action="">
-
-        <h2>Buscar por identificación</h2><br><br>
-        <input type="number" name="buscar"><br>
-        <button type="submit">Buscar</button>
-    </form>
-</body>
-
 <?php
 session_start();
 
@@ -31,9 +12,7 @@ if (!isset($_SESSION["usuario"]) || !isset($_SESSION["contra"])) {
     header("Location: funciones/login_error.php");
     exit;
 }
-?>
 
-<?php
 //Aqui se hace de manera local usando bd.php
 /*
 require_once __DIR__ . '/funciones/alertas.php';
@@ -72,6 +51,11 @@ require_once __DIR__ . '/funciones/alertas.php';
 require_once __DIR__ . '/funciones/conect.php';
 //Aqui directamente con la base de datos, no lo hize como si fuera localmente
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $comprobar="SELECT * FROM usuarios WHERE id=?";
+    if(!is_array($comprobar)){
+        echo "El usuario no existe";
+        exit;
+    }
     $buscar = strtoupper(trim($_POST["buscar"] ?? ""));
     $conexion = conectar();
     file_put_contents(
@@ -90,10 +74,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "Usuario eliminado";
        
     }
-
-
 }
 
 ?>
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <a href="menu.php">Volver al menu</a>
+    <form method="POST" action="">
+
+        <h2>Buscar por identificación</h2><br><br>
+        <input type="number" name="buscar"><br>
+        <button type="submit">Buscar</button>
+    </form>
+</body>
+
+
 
 </html>

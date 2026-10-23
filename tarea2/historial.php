@@ -1,4 +1,3 @@
-
 <?php
 session_start();
 
@@ -30,6 +29,7 @@ if (!isset($_SESSION["usuario"]) || !isset($_SESSION["contra"])) {
     <hr>
 
     <?php
+        $archivo = __DIR__ . "/historial.txt";
     if (file_exists($archivo)) {
         $lineas = file($archivo, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
