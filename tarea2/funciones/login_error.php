@@ -7,6 +7,7 @@
 </head>
 <body>
     <h1>Error al iniciar sesion, vuelva a iniciar</h1>
+    
     <a href="../inicio_sesion.php">Vuelva a iniciar sesion</a>
 </body>
 </html>
