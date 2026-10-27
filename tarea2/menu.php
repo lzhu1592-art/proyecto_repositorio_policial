@@ -24,7 +24,7 @@ if (!isset($_SESSION["usuario"]) || !isset($_SESSION["contra"])) {
 <body>
     
     <a href="funciones/cerrar.php">Cerrar sesion</a>
-    <div style="background-color:#eef1f5;  border: 1px solid black; >
+    <div style="background-color:#eef1f5;  border: 1px solid black; ">
         <table border="0">
            
                 <tr >

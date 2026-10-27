@@ -22,16 +22,24 @@ require_once __DIR__ . '/funciones/alertas.php';
 require_once __DIR__ . '/funciones/conect.php';
 
 //LLamo a la function cuando necesite algo
-
+$confirmacion=false;
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    
+    //Aqui digo: del boton con id "aceptar" si esta presionado, entonces la variable confirmacion es true
+    if(isset($_POST["registrar"])){
+        $confirmacion=true;
+    }
+    if(!isset($_POST["aceptar"])){
+        echo "Has cancelado la operacion";
+    }else{
 
+    
     $nombre = strtolower(trim($_POST["nombre"] ?? ""));
     $documento = strtoupper(trim($_POST["documento"] ?? ""));
     $antecedente = trim($_POST["antecedente"] ?? "");
     $descripcion = $_POST["descripcion"] ?? "";
     if (strlen($documento) != 9 || str_contains($documento, " ")) {
         formato();
-        exit;
     }
     //El file_put_contents sirve para escribir en un archibo.txt
     file_put_contents(
@@ -47,8 +55,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $descripcion === ""
     ) {
         alerta_campo();
-    } else {
+    }else {
         $conectar2 = conectar();
+        //Aqui compruebo si el criminal ya existe en la base de datos, si es asi no lo guardo
+        $comprobar ="SELECT * FROM criminales WHERE documento = ?";
+        $stmt = $conectar2->prepare("$comprobar");
+        $stmt->bind_param("s", $documento);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        if ($resultado->num_rows > 0) {
+            alerta_repetido();
+        }else{
+        
         $guardar = "INSERT INTO criminales(nombre_criminal,delito,descripcion_delito,documento) 
         VALUES(?,?,?,?)";
         $stmt = $conectar2->prepare("$guardar");
@@ -73,7 +91,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
              "antecedente" => $antecedente,
              "descripcion" => $descripcion
          ];
-*/
+*/   }
+    }
     }
 }
 ?>
@@ -104,15 +123,29 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <br><br>
 
         <label for="antecedente">Antecedente:</label>
-        <input type="text" id="antecedente" name="antecedente" required>
+        <textarea id="antecedente" name="antecedente" required></textarea>
         <br><br>
 
         <label for="descripcion">Descripción:</label>
         <textarea id="descripcion" name="descripcion" required></textarea>
         <br><br>
+        <!-- Aqui estoy diciendo que si no hay confirmacion me muestre el boton de registrar, si hay 
+         confirmacion me muestre el mensaje de confirmacion y los botones de aceptar o cancelar -->
+<?php if(!$confirmacion){?>
+        <button type="submit" name="registrar">Registrar criminal</button>
+<?php } else{?>
+        <p>¿Estás seguro de que quieres eliminar el usuario?</p>
 
-        <button type="submit">Registrar criminal</button>
+    <form method="POST">
+        <button type="submit" name="aceptar">
+            Sí, continuar
+        </button>
 
+        <button type="submit" name="cancelar">
+            No, cancelar
+        </button>
+    </form>
+<?php } ?>
     </form>
 
     <hr>

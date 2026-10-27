@@ -1,4 +1,4 @@
-RN-26. Campos obligatorios: el sistema no permitirá guardar un registro policial si faltan campos definidos como obligatorios.
+RN-26. Campos obligatorios: el sistema no permitirá guardar un registro policial si faltan campos definidos como obligatorios. //Completado
 
 RN-27. Confirmación de operaciones: el sistema solicitará confirmación antes de ejecutar acciones críticas, como desactivar un usuario o iniciar un procedimiento de eliminación autorizado.
 

@@ -10,7 +10,10 @@ function formato(){
     echo "<p style='color:red;'>Formato no valido.</p>";
 }
 
+function alerta_repetido(){
+    echo "<p style='color:red;'>Esa persona ya existe, en caso de añadir nuevo delito, debe modificarlo.</p>";
 
+}
 
 
 ?>

@@ -1,4 +1,7 @@
  <?php
+ ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
     //Aqui hize usando base de datos con mariadb y localmente
     require_once __DIR__ . '/funciones/alertas.php';
     require_once __DIR__ . '/funciones/conect.php';
