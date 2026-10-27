@@ -1,0 +1,17 @@
+RN-26. Campos obligatorios: el sistema no permitirá guardar un registro policial si faltan campos definidos como obligatorios.
+
+RN-27. Confirmación de operaciones: el sistema solicitará confirmación antes de ejecutar acciones críticas, como desactivar un usuario o iniciar un procedimiento de eliminación autorizado.
+
+RN-28. Gestión de errores: si ocurre un error al guardar, modificar o consultar información, el sistema mostrará un mensaje claro y evitará informar de una operación exitosa cuando no se haya completado.
+
+RN-29. Consistencia de la información: el sistema comprobará que las referencias a usuarios, personas y registros relacionados correspondan a elementos existentes.
+
+RN-30. Permisos de modificación: el sistema verificará los permisos en el servidor antes de ejecutar cualquier operación que modifique información.
+
+RN-31. Paginación de resultados: cuando una consulta devuelva muchos registros, el sistema podrá presentarlos de forma paginada para facilitar su visualización.
+
+RN-32. Datos de auditoría: el sistema almacenará la fecha y hora de las operaciones relevantes utilizando una referencia temporal coherente.
+
+RN-33. Protección de sesión: el sistema deberá gestionar la expiración de las sesiones según la política de seguridad establecida.
+
+RN-34. Exportación de datos: el sistema solo permitirá exportar información a usuarios autorizados y aplicará las restricciones de confidencialidad correspondientes.
