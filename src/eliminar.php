@@ -49,30 +49,38 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 require_once __DIR__ . '/funciones/alertas.php';
 require_once __DIR__ . '/funciones/conect.php';
+$confirmacion=false;
 //Aqui directamente con la base de datos, no lo hize como si fuera localmente
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $comprobar="SELECT * FROM usuarios WHERE id=?";
-    if(!is_array($comprobar)){
-        echo "El usuario no existe";
-        exit;
+      //Aqui digo: del boton con id "aceptar" si esta presionado, entonces la variable confirmacion es true
+    if(isset($_POST["eliminar"])){
+        $confirmacion=true;
     }
-    $buscar = strtoupper(trim($_POST["buscar"] ?? ""));
-    $conexion = conectar();
-    file_put_contents(
-        "historial.txt",
-        date("H:i") . " eliminar usuario" . PHP_EOL,
-        FILE_APPEND | LOCK_EX
-    );
-    $sql = "DELETE FROM usuarios WHERE id=?";
-    $stmt = $conexion->prepare($sql);
-    $stmt->bind_param("i", $buscar);
-    $stmt->execute();
-    $resultado = $stmt->get_result();
-    if ($buscar === "") {
-        alerta_campo();
-    } else {
-        echo "Usuario eliminado";
-       
+    if(!isset($_POST["aceptar"])){
+        echo "Has cancelado la operacion";
+    }else{
+        $comprobar="SELECT * FROM usuarios WHERE id=?";
+        if(!is_array($comprobar)){
+            echo "El usuario no existe";
+            exit;
+        }
+        $buscar = strtoupper(trim($_POST["buscar"] ?? ""));
+        $conexion = conectar();
+        file_put_contents(
+            "historial.txt",
+            date("H:i") . " eliminar usuario" . PHP_EOL,
+            FILE_APPEND | LOCK_EX
+        );
+        $sql = "DELETE FROM usuarios WHERE id=?";
+        $stmt = $conexion->prepare($sql);
+        $stmt->bind_param("i", $buscar);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        if ($buscar === "") {
+            alerta_campo();
+        } else {
+            echo "Usuario eliminado";
+        }
     }
 }
 
@@ -92,7 +100,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <h2>Buscar por identificación</h2><br><br>
         <input type="number" name="buscar"><br>
-        <button type="submit">Buscar</button>
+        <?php if(!$confirmacion){?>
+            <button type="submit" name="eliminar">Eliminar criminal</button>
+        <?php } else{?>
+                <p>¿Estás seguro de que quieres eliminar este criminal?</p>
+
+            <form method="POST">
+                <button type="submit" name="aceptar">
+                    Sí, continuar
+                </button>
+
+                <button type="submit" name="cancelar">
+                    No, cancelar
+                </button>
+            </form>
+<?php } ?>
     </form>
 </body>
 

@@ -23,7 +23,7 @@ if (!isset($_SESSION["usuario"]) || !isset($_SESSION["contra"])) {
 
 <body>
     
-    <a href="funciones/cerrar.php">Cerrar sesion</a>
+    
     <div style="background-color:#eef1f5;  border: 1px solid black; ">
         <table border="0">
            
@@ -40,7 +40,7 @@ if (!isset($_SESSION["usuario"]) || !isset($_SESSION["contra"])) {
                     <p><a href="registrar.php"> Registrar persona </a></p>
                     <p><a href="historial.php">Historial de operaciones</a> </p>
                     <p><a href="gestion.php">Gestion de usuarios</a></p>
-                    <p><a href="cerrar.php">Cerrar sesion</a></p>
+                    <p><a href="funciones/cerrar.php">Cerrar sesion</a></p>
                 </td>
             </tr>
 

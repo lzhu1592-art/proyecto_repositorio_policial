@@ -51,43 +51,50 @@ if (!isset($_SESSION["usuarios"])) {
 }
 */
 //LLamo a la function cuando necesite algo
-
+$confirmacion=false;
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+  //Aqui digo: del boton con id "aceptar" si esta presionado, entonces la variable confirmacion es true
+    if(isset($_POST["crear"])){
+        $confirmacion=true;
+    }
+    if(!isset($_POST["aceptar"])){
+        echo "Has cancelado la operacion";
+    }else{
+        $nombre = strtolower(trim($_POST["nombre"] ?? ""));
+        $contr = strtoupper(trim($_POST["contr"] ?? ""));
+        $rol = trim($_POST["rol"] ?? "");
+    //El file_put_contents sirve para escribir en un archibo.txt
+        file_put_contents(
+        "historial.txt",
+        date("H:i") . " Crear usuario" . PHP_EOL,
+        FILE_APPEND 
+    );
+        // Comprobar que todos los campos estén completos
+        if (
+            $nombre === "" ||
+            $contr === "" ||
+            $rol === ""
+        ) {
+            alerta_campo();
+        }elseif(
+            strlen($nombre) != 3 || strlen($contr) < 5 || !str_contains($rol, "invitado") && !str_contains($rol, "administrador") && !str_contains($rol, "policia") 
+        ){      
+            formato();
+            exit;
+        }else {
+            $conectar2=conectar();
+            $guardar="INSERT INTO usuarios(nombre_usuario,contr,rol) 
+            VALUES(?,?,?)";
+            $stmt=$conectar2->prepare("$guardar");
+            //Se debe poner el tipo (string, int ) por cada variable        
+            $stmt->bind_param("sss", $nombre,$contr,$rol);
+            $stmt->execute();
+            echo "Datos guardados";
 
-    $nombre = strtolower(trim($_POST["nombre"] ?? ""));
-    $contr = strtoupper(trim($_POST["contr"] ?? ""));
-    $rol = trim($_POST["rol"] ?? "");
-//El file_put_contents sirve para escribir en un archibo.txt
-    file_put_contents(
-    "historial.txt",
-    date("H:i") . " Crear usuario" . PHP_EOL,
-    FILE_APPEND 
-);
-    // Comprobar que todos los campos estén completos
-    if (
-        $nombre === "" ||
-        $contr === "" ||
-        $rol === ""
-    ) {
-        alerta_campo();
-    }elseif(
-        strlen($nombre) != 3 || strlen($contr) < 5 || !str_contains($rol, "invitado") && !str_contains($rol, "administrador") && !str_contains($rol, "policia") 
-    ){      
-        formato();
-        exit;
-    }else {
-        $conectar2=conectar();
-        $guardar="INSERT INTO usuarios(nombre_usuario,contr,rol) 
-        VALUES(?,?,?)";
-        $stmt=$conectar2->prepare("$guardar");
-        //Se debe poner el tipo (string, int ) por cada variable        
-        $stmt->bind_param("sss", $nombre,$contr,$rol);
-        $stmt->execute();
-        echo "Datos guardados";
-
-        $stmt->close();
-        $conectar2->close();    
-           
+            $stmt->close();
+            $conectar2->close();    
+            
+        }
     }
 }
 ?>
@@ -119,7 +126,21 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <input type="text" id="rol" name="rol" required>
         <br><br>
 
-        <button type="submit">Crear Usuario</button>
+        <?php if(!$confirmacion){?>
+            <button type="submit" name="crear">Crear Usuario</button>
+        <?php } else{?>
+                <p>¿Estás seguro de que quieres crear este usuario?</p>
+
+            <form method="POST">
+                <button type="submit" name="aceptar">
+                    Sí, continuar
+                </button>
+
+                <button type="submit" name="cancelar">
+                    No, cancelar
+                </button>
+            </form>
+<?php } ?>
 
     </form>
 

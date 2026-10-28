@@ -13,8 +13,9 @@ if (!isset($_SESSION["usuario"]) || !isset($_SESSION["contra"])) {
     exit;
 }
 
+require_once __DIR__ . '/funciones/conect.php';
 require_once __DIR__ . '/funciones/alertas.php';
-require_once __DIR__ . '/funciones/bd.php';
+//require_once __DIR__ . '/funciones/bd.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $buscar = strtoupper(trim($_POST["buscar"] ?? ""));
@@ -35,19 +36,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bind_param("i", $buscar);
         $stmt->execute();
         $resultado = $stmt->get_result();
-        if ($buscar === "") {
-            alerta_campo();
-        } else {
-            while ($fila = $resultado->fetch_assoc()) {
-                echo "Nombre: " . $fila["nombre_usuario"] . "<br>";
-                echo "Contraseña: " . $fila["contr"] . "<br>";
-                echo "Rol: " . $fila["rol"] .  "<br><br><br>";
-            }
+
+            
+           
         }
-    }
     
-
-
 }
     
 /*
@@ -93,7 +86,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Busqueda de usuarios</title>
 </head>
 
 <body>
@@ -105,6 +98,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <input type="text" name="buscar"><br>
         <button type="submit">Buscar</button>
     </form>
+     <?php while ($fila = $resultado->fetch_assoc()): ?>
+                <h3><?= htmlspecialchars($fila["nombre_usuario"]) ?></h3>
+                <p>Contraseña: <?= htmlspecialchars($fila["contr"]) ?></p>
+                <p>Rol: <?= htmlspecialchars($fila["rol"]) ?></p>
+                <hr>
+            <?php endwhile; ?>
 </body>
 
 
