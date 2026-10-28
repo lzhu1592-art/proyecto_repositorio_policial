@@ -49,39 +49,52 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 require_once __DIR__ . '/funciones/alertas.php';
 require_once __DIR__ . '/funciones/conect.php';
-$confirmacion=false;
+$mostrarConfirmacion=false;
 //Aqui directamente con la base de datos, no lo hize como si fuera localmente
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
       //Aqui digo: del boton con id "aceptar" si esta presionado, entonces la variable confirmacion es true
     if(isset($_POST["eliminar"])){
-        $confirmacion=true;
-    }
-    if(!isset($_POST["aceptar"])){
-        echo "Has cancelado la operacion";
-    }else{
-        $comprobar="SELECT * FROM usuarios WHERE id=?";
-        if(!is_array($comprobar)){
-            echo "El usuario no existe";
-            exit;
-        }
+    
         $buscar = strtoupper(trim($_POST["buscar"] ?? ""));
-        $conexion = conectar();
-        file_put_contents(
-            "historial.txt",
-            date("H:i") . " eliminar usuario" . PHP_EOL,
-            FILE_APPEND | LOCK_EX
-        );
-        $sql = "DELETE FROM usuarios WHERE id=?";
-        $stmt = $conexion->prepare($sql);
-        $stmt->bind_param("i", $buscar);
-        $stmt->execute();
-        $resultado = $stmt->get_result();
         if ($buscar === "") {
             alerta_campo();
-        } else {
-            echo "Usuario eliminado";
+        } else{
+            $_SESSION["buscar_usuario"] = (int)$buscar;
         }
+        $mostrarConfirmacion=true;
+
+    }elseif(isset($_POST["cancelar"])){
+        
+        echo "Has cancelado la operacion";
+    }elseif(isset($_POST["aceptar"])){
+        
+        $conexion = conectar();
+       
+        $sql = "DELETE FROM usuarios WHERE id=?";
+        $stmt = $conexion->prepare($sql);
+        $stmt->bind_param("i", $_SESSION["buscar_usuario"]);
+        if ($stmt->execute()) {
+
+                if ($stmt->affected_rows > 0) {
+
+                    echo"Usuario eliminado correctamente.<br><br>";
+
+                    file_put_contents(
+                        __DIR__ . "/historial.txt",
+                        date("H:i") . " Eliminación de usuario ID: "
+                        . $_SESSION["buscar_usuario"] . PHP_EOL,
+                        FILE_APPEND | LOCK_EX
+                    );
+
+                } else {
+                    echo "No se encontró ningún usuario con ese ID.<br><br>";
+                }
+
+            } else {
+                echo "Error al eliminar el usuario.<br><br>";
+            }
     }
+        
 }
 
 ?>
@@ -91,7 +104,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Eliminar Usuario</title>
 </head>
 
 <body>
@@ -100,10 +113,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <h2>Buscar por identificación</h2><br><br>
         <input type="number" name="buscar"><br>
-        <?php if(!$confirmacion){?>
-            <button type="submit" name="eliminar">Eliminar criminal</button>
+        <?php if(!$mostrarConfirmacion){?>
+            <button type="submit" name="eliminar">Eliminar usuario</button>
         <?php } else{?>
-                <p>¿Estás seguro de que quieres eliminar este criminal?</p>
+                <p>¿Estás seguro de que quieres eliminar este usuario?</p>
 
             <form method="POST">
                 <button type="submit" name="aceptar">
@@ -115,6 +128,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </button>
             </form>
 <?php } ?>
+
     </form>
 </body>
 

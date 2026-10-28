@@ -14,3 +14,4 @@
 19:49 Busqueda usuario
 19:50 Busqueda usuario
 19:50 Busqueda usuario
+20:21 Eliminación de usuario ID: 3

@@ -51,51 +51,61 @@ if (!isset($_SESSION["usuarios"])) {
 }
 */
 //LLamo a la function cuando necesite algo
-$confirmacion=false;
+$mostrarConfirmacion=false;
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
   //Aqui digo: del boton con id "aceptar" si esta presionado, entonces la variable confirmacion es true
     if(isset($_POST["crear"])){
-        $confirmacion=true;
-    }
-    if(!isset($_POST["aceptar"])){
-        echo "Has cancelado la operacion";
-    }else{
         $nombre = strtolower(trim($_POST["nombre"] ?? ""));
         $contr = strtoupper(trim($_POST["contr"] ?? ""));
         $rol = trim($_POST["rol"] ?? "");
-    //El file_put_contents sirve para escribir en un archibo.txt
-        file_put_contents(
-        "historial.txt",
-        date("H:i") . " Crear usuario" . PHP_EOL,
-        FILE_APPEND 
-    );
-        // Comprobar que todos los campos estén completos
+          // Comprobar que todos los campos estén completos
         if (
             $nombre === "" ||
             $contr === "" ||
             $rol === ""
         ) {
             alerta_campo();
-        }elseif(
-            strlen($nombre) != 3 || strlen($contr) < 5 || !str_contains($rol, "invitado") && !str_contains($rol, "administrador") && !str_contains($rol, "policia") 
-        ){      
+        }elseif (
+        strlen($nombre) != 3 ||
+        strlen($contr) < 5 ||
+           !in_array($rol, ["invitado", "administrador", "policia"], true)
+    ) {      
             formato();
-            exit;
-        }else {
-            $conectar2=conectar();
+        }else{
+            $_SESSION["registro_pendiente"] = [
+                "nombre" => $nombre,
+                "contr" => $contr,
+                "rol" => $rol
+            ];
+        }
+        
+        $mostrarConfirmacion=true;
+    }
+    if(isset($_POST["aceptar"])){
+
+
+         $conectar2=conectar();
             $guardar="INSERT INTO usuarios(nombre_usuario,contr,rol) 
             VALUES(?,?,?)";
             $stmt=$conectar2->prepare("$guardar");
             //Se debe poner el tipo (string, int ) por cada variable        
             $stmt->bind_param("sss", $nombre,$contr,$rol);
             $stmt->execute();
-            echo "Datos guardados";
-
-            $stmt->close();
-            $conectar2->close();    
             
-        }
+            //El file_put_contents sirve para escribir en un archibo.txt
+                file_put_contents(
+                "historial.txt",
+                date("H:i") . " Crear usuario" . PHP_EOL,
+                FILE_APPEND 
+            );
+            
+           echo "Usuario creado correctamente.<br><br>";
+        $stmt->close();
+        $conectar2->close();
+    }elseif(isset($_POST["cancelar"])){
+        echo "Has cancelado la operacion";
     }
+        
 }
 ?>
 
@@ -119,7 +129,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <br><br>
 
         <label for="contr">Contraseña:</label>
-        <input type="text" id="contr" name="contr" required>
+        <input type="password" id="contr" name="contr" required>
         <br><br>
 
         <label for="rol">Rol (administrador, policia, invitado):</label>
