@@ -1,7 +1,7 @@
 RN-26. Campos obligatorios: el sistema no permitirá guardar un registro policial si faltan campos definidos como obligatorios. //Completado
 
 RN-27. Confirmación de operaciones: el sistema solicitará confirmación antes de ejecutar acciones críticas, como desactivar un usuario o iniciar un procedimiento de eliminación autorizado.
-//crear.php,buscar.php
+//buscar.php
 
 
 RN-28. Gestión de errores: si ocurre un error al guardar, modificar o consultar información, el sistema mostrará un mensaje claro y 

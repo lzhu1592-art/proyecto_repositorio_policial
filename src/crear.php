@@ -66,41 +66,63 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         ) {
             alerta_campo();
         }elseif (
-        strlen($nombre) != 3 ||
+        strlen($nombre) < 3 ||
         strlen($contr) < 5 ||
-           !in_array($rol, ["invitado", "administrador", "policia"], true)
-    ) {      
+          $rol !== "administrador" && $rol !== "policia" && $rol !== "invitado")
+        {      
             formato();
-
         }else{
             $_SESSION["registro_pendiente"] = [
                 "nombre" => $nombre,
                 "contr" => $contr,
                 "rol" => $rol
             ];
+            $mostrarConfirmacion=true;
         }
         
-        $mostrarConfirmacion=true;
+        
     }
     if(isset($_POST["aceptar"])){
-
+        if(isset($_SESSION["registro_pendiente"])) {
+            $datos = $_SESSION["registro_pendiente"];
+            $nombre = $datos["nombre"];
+            $contr = $datos["contr"];
+            $rol = $datos["rol"];
+        }
 
          $conectar2=conectar();
-            $guardar="INSERT INTO usuarios(nombre_usuario,contr,rol) 
-            VALUES(?,?,?)";
+            $guardar="SELECT * FROM usuarios WHERE nombre_usuario=?";
             $stmt=$conectar2->prepare("$guardar");
             //Se debe poner el tipo (string, int ) por cada variable        
-            $stmt->bind_param("sss", $nombre,$contr,$rol);
+            $stmt->bind_param("s", $nombre);
             $stmt->execute();
-            
-            //El file_put_contents sirve para escribir en un archibo.txt
-                file_put_contents(
-                "historial.txt",
-                date("H:i") . " Crear usuario" . PHP_EOL,
-                FILE_APPEND 
-            );
-            
-           echo "Usuario creado correctamente.<br><br>";
+            $resultado=$stmt->get_result();
+              if ($resultado->num_rows > 0) {
+
+                alerta_repetido();
+
+            } else {
+                
+                $sql="INSERT INTO usuarios(nombre_usuario,contr,rol) 
+            VALUES(?,?,?)";
+                $stmt=$conectar2->prepare("$sql");
+                //Se debe poner el tipo (string, int ) por cada variable        
+                $stmt->bind_param("sss", $nombre,$contr,$rol);
+                    if($stmt->execute()){
+                        //El file_put_contents sirve para escribir en un archibo.txt
+                        file_put_contents(
+                        "historial.txt",
+                        date("H:i") . " Crear usuario" . PHP_EOL,
+                        FILE_APPEND 
+                    );
+                     echo "Usuario creado correctamente.<br><br>";
+                     unset($_SESSION["registro_pendiente"]);
+                }else{
+                    echo "Error al guardar los datos.<br><br>";
+                    unset($_SESSION["registro_pendiente"]);
+                }
+            }
+          
         $stmt->close();
         $conectar2->close();
     }elseif(isset($_POST["cancelar"])){
@@ -118,6 +140,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <title>Crear usuarios</title>
 </head>
 <body>
+    <?php if ($mostrarConfirmacion): ?>
+
+    <?php alerta_confirmacion(); ?>
+
+<?php else: ?>
 
     <h1>Crear Usuarios</h1>
 
@@ -137,24 +164,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <input type="text" id="rol" name="rol" required>
         <br><br>
 
-        <?php if(!$mostrarConfirmacion){?>
             <button type="submit" name="crear">Crear Usuario</button>
-        <?php } else{?>
-                <p>¿Estás seguro de que quieres crear este usuario?</p>
+       
 
-            <form method="POST">
-                <button type="submit" name="aceptar">
-                    Sí, continuar
-                </button>
-
-                <button type="submit" name="cancelar">
-                    No, cancelar
-                </button>
-            </form>
-<?php } ?>
 
     </form>
-
+<?php endif; ?>
 
 </body>
 </html>
