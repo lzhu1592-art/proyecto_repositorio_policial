@@ -4,16 +4,16 @@ RN-27. Confirmación de operaciones: el sistema solicitará confirmación antes 
 //crear.php,buscar.php
 
 
-RN-28. Gestión de errores: si ocurre un error al guardar, modificar o consultar información, el sistema mostrará un mensaje claro y evitará informar de una operación exitosa cuando no se haya completado.
+RN-28. Gestión de errores: si ocurre un error al guardar, modificar o consultar información, el sistema mostrará un mensaje claro y 
+evitará informar de una operación exitosa cuando no se haya completado.//Completado
 
-RN-29. Consistencia de la información: el sistema comprobará que las referencias a usuarios, personas y registros relacionados correspondan a elementos existentes.
+RN-29. Consistencia de la información: el sistema comprobará que las referencias a usuarios, personas y registros relacionados correspondan a elementos existentes.//Completado
 
 RN-30. Permisos de modificación: el sistema verificará los permisos en el servidor antes de ejecutar cualquier operación que modifique información.
 
 RN-31. Paginación de resultados: cuando una consulta devuelva muchos registros, el sistema podrá presentarlos de forma paginada para facilitar su visualización.
 
-RN-32. Datos de auditoría: el sistema almacenará la fecha y hora de las operaciones relevantes utilizando una referencia temporal coherente.
-
-RN-33. Protección de sesión: el sistema deberá gestionar la expiración de las sesiones según la política de seguridad establecida.
-
-RN-34. Exportación de datos: el sistema solo permitirá exportar información a usuarios autorizados y aplicará las restricciones de confidencialidad correspondientes.
+RN-32. Datos de auditoría: el sistema almacenará la fecha y hora de las operaciones relevantes utilizando una referencia temporal coherente.//Completado
+//Esta regla se hizo  con el historial
+RN-33. Protección de sesión: el sistema deberá gestionar la expiración de las sesiones según la política de seguridad establecida.//Completado con cache control
+//Este ya se hizo
