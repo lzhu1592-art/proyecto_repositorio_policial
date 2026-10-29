@@ -71,6 +71,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
            !in_array($rol, ["invitado", "administrador", "policia"], true)
     ) {      
             formato();
+
         }else{
             $_SESSION["registro_pendiente"] = [
                 "nombre" => $nombre,
@@ -136,7 +137,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <input type="text" id="rol" name="rol" required>
         <br><br>
 
-        <?php if(!$confirmacion){?>
+        <?php if(!$mostrarConfirmacion){?>
             <button type="submit" name="crear">Crear Usuario</button>
         <?php } else{?>
                 <p>¿Estás seguro de que quieres crear este usuario?</p>
