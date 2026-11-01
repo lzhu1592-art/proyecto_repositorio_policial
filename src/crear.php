@@ -29,8 +29,8 @@ if (!isset($_SESSION["usuarios"])) {
 //El file_put_contents sirve para escribir en un archibo.txt
     file_put_contents(
     "historial.txt",
-    date("H:i") . " Crear usuario" . PHP_EOL,
-    FILE_APPEND 
+    date("H:i") . " Crear usuario: " . $_SESSION["registro_pendiente"]["nombre"] . PHP_EOL,
+    FILE_APPEND | LOCK_EX
 );
     // Comprobar que todos los campos estén completos
     if (

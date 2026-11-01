@@ -15,55 +15,22 @@ if (!isset($_SESSION["usuario"]) || !isset($_SESSION["contra"])) {
 
 require_once __DIR__ . '/funciones/alertas.php';
 require_once __DIR__ . '/funciones/conect.php';
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $buscar = strtoupper(trim($_POST["buscar"] ?? ""));
+    
     if($buscar === "") {
         alerta_campo();
     } else {
         $en = false;
         $conexion = conectar();
-        file_put_contents(
-            "historial.txt",
-            date("H:i") . " Busqueda: " . $buscar . PHP_EOL,
-            FILE_APPEND | LOCK_EX
-        );
-        $sql = "SELECT * FROM criminales WHERE documento=?";
-        $stmt = $conexion->prepare($sql);
-        $stmt->bind_param("s", $buscar);
-        $stmt->execute();
-        $resultado = $stmt->get_result();
-        if ($buscar === "") {
-            alerta_campo();
-        } else {
-            while ($fila = $resultado->fetch_assoc()) {
-                echo "Nombre: " . $fila["nombre_criminal"] . "<br>";
-                echo "Documentacion: " . $fila["documento"] . "<br>";
-                echo "Delito: " . $fila["delito"] . "<br>";
-                echo "Descripcion del delito: " . $fila["descripcion_delito"] . "<br><br><br>";
-            }
-        }
+        $resultados = obtener_criminales($conexion, $buscar);
+        $conexion->close();
+
+        registrar_historial("Busqueda: " . $buscar);
+        $en = true;
+       
     }
-    $en = false;
-    $conexion = conectar();
-    file_put_contents(
-        "historial.txt",
-        date("H:i") . " Busqueda: " . $buscar . PHP_EOL,
-        FILE_APPEND | LOCK_EX
-    );
-    $sql = "SELECT * FROM criminales WHERE documento=?";
-    $stmt = $conexion->prepare($sql);
-    $stmt->bind_param("s", $buscar);
-    $stmt->execute();
-    $resultado = $stmt->get_result();
-    if ($buscar === "") {
-        alerta_campo();
-    } else {
-        while ($fila = $resultado->fetch_assoc()) {
-            echo "Nombre: " . $fila["nombre_criminal"] . "<br>";
-            echo "Documentacion: " . $fila["documento"] . "<br>";
-            echo "Delito: " . $fila["delito"] . "<br>";
-            echo "Descripcion del delito: " . $fila["descripcion_delito"] . "<br><br><br>";
-        }
         /*
       
             require_once __DIR__ . '/funciones/bd.php';
@@ -91,7 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 echo "No se ha encontrado la persona";
             }
                 */
-    }
+    
 }
 ?>
 <!DOCTYPE html>
@@ -112,6 +79,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <input type="text" name="buscar"><br>
         <button type="submit">Buscar</button>
     </form>
+    <?php if ($buscado): ?>
+        <hr>
+        <!-- Mostrar resultados de la búsqueda 
+         Si el array de $resultado es 0 significa que no hay-->
+        <?php if (count($resultados) === 0): ?>
+            <p style="color:red;">No se ha encontrado ninguna persona con ese documento.</p>
+        <?php else: ?>
+            <p>Resultados encontrados: <?= count($resultados) ?></p>
+        <!--Aqui uso un foreach para recorre una array-->
+            <?php foreach ($resultados as $criminal): ?>
+                <?php mostrar_criminal($criminal); ?>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    <?php endif; ?>
 </body>
 
 

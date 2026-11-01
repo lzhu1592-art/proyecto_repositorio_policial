@@ -52,7 +52,7 @@ require_once __DIR__ . '/funciones/conect.php';
 $mostrarConfirmacion=false;
 //Aqui directamente con la base de datos, no lo hize como si fuera localmente
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      //Aqui digo: del boton con id "aceptar" si esta presionado, entonces la variable confirmacion es true
+      //Aqui digo: del boton con id "eliminar" si esta presionado, entonces la variable confirmacion es true
     if(isset($_POST["eliminar"])){
     
         $buscar = strtoupper(trim($_POST["buscar"] ?? ""));

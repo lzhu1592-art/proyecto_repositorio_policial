@@ -75,62 +75,29 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             $conexion = conectar();
 
-            $sql = "SELECT documento
-                    FROM criminales
-                    WHERE documento = ?";
-
-            $stmt = $conexion->prepare($sql);
-            $stmt->bind_param("s", $documento);
-            $stmt->execute();
-
-            $resultado = $stmt->get_result();
 //Aqui uso el -> para decir que si el $resultado  es num_rows(que es una variable predeterminada en php) es mayor a 0, entonces la persona ya existe 
 // y no se puede registrar
-            if ($resultado->num_rows > 0) {
+            if (existe_criminal($conexion, $documento)) {
 
                 alerta_repetido();
 
-            } else {
-
-                $sql = "INSERT INTO criminales
-                        (nombre_criminal, delito,
-                         descripcion_delito, documento)
-                        VALUES (?, ?, ?, ?)";
-
-                $stmt->close();
-                $stmt = $conexion->prepare($sql);
-
-                $stmt->bind_param(
-                    "ssss",
-                    $nombre,
-                    $antecedente,
-                    $descripcion,
-                    $documento
-                );
-
-                if ($stmt->execute()) {
-                    echo "Datos guardados correctamente.";
-
-                    file_put_contents(
-                        __DIR__ . "/historial.txt",
-                        date("H:i") . " registro criminal: " . $_SESSION["registro_pendiente"]["nombre"] . PHP_EOL,
-                        FILE_APPEND
-                    );
-
-                    unset($_SESSION["registro_pendiente"]);
+            } elseif( insertar_criminal($conexion, $datos)) {
+                echo "Datos guardados correctamente.";
+                registrar_historial("registro criminal: " . $datos["nombre"]);
+                
                 } else {
                     echo "Error al guardar los datos.";
                 }
             }
 
-            $stmt->close();
+            unset($_SESSION["registro_pendiente"]);
             $conexion->close();
 
         } else {
             echo "No hay ningún registro pendiente de confirmar.";
         }
     }
-}
+
 /*
                 // Cargar los criminales iniciales al comenzar una sesión
                 Es decir que yo digo que si no existe una sesion de criminales me los creas
@@ -204,7 +171,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 <?php endif; ?>
 
-
+<!--
 </form>
 
     <hr>
@@ -245,6 +212,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     */
         
     ?>
+    -->
 </body>
 
 </html>
