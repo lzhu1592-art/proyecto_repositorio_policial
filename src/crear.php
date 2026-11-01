@@ -112,7 +112,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         //El file_put_contents sirve para escribir en un archibo.txt
                         file_put_contents(
                         "historial.txt",
-                        date("H:i") . " Crear usuario" . PHP_EOL,
+                        date("H:i") . " Crear usuario: " . $_SESSION["registro_pendiente"]["nombre"] . PHP_EOL,
                         FILE_APPEND 
                     );
                      echo "Usuario creado correctamente.<br><br>";

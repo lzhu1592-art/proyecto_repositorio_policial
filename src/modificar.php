@@ -98,7 +98,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     file_put_contents(
                         "historial.txt",
-                        date("H:i") . " modificar usuario" . PHP_EOL,
+                        date("H:i") . " modificar usuario: " . $_SESSION["registro_pendiente"]["nombre"] . PHP_EOL,
                         FILE_APPEND | LOCK_EX
                     );
                     unset($_SESSION["registro_pendiente"]);

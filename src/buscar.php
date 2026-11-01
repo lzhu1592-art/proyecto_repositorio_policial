@@ -17,11 +17,37 @@ require_once __DIR__ . '/funciones/alertas.php';
 require_once __DIR__ . '/funciones/conect.php';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $buscar = strtoupper(trim($_POST["buscar"] ?? ""));
+    if($buscar === "") {
+        alerta_campo();
+    } else {
+        $en = false;
+        $conexion = conectar();
+        file_put_contents(
+            "historial.txt",
+            date("H:i") . " Busqueda: " . $buscar . PHP_EOL,
+            FILE_APPEND | LOCK_EX
+        );
+        $sql = "SELECT * FROM criminales WHERE documento=?";
+        $stmt = $conexion->prepare($sql);
+        $stmt->bind_param("s", $buscar);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        if ($buscar === "") {
+            alerta_campo();
+        } else {
+            while ($fila = $resultado->fetch_assoc()) {
+                echo "Nombre: " . $fila["nombre_criminal"] . "<br>";
+                echo "Documentacion: " . $fila["documento"] . "<br>";
+                echo "Delito: " . $fila["delito"] . "<br>";
+                echo "Descripcion del delito: " . $fila["descripcion_delito"] . "<br><br><br>";
+            }
+        }
+    }
     $en = false;
     $conexion = conectar();
     file_put_contents(
         "historial.txt",
-        date("H:i") . " registro" . PHP_EOL,
+        date("H:i") . " Busqueda: " . $buscar . PHP_EOL,
         FILE_APPEND | LOCK_EX
     );
     $sql = "SELECT * FROM criminales WHERE documento=?";

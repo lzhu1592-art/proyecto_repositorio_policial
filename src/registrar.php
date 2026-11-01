@@ -113,7 +113,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                     file_put_contents(
                         __DIR__ . "/historial.txt",
-                        date("H:i") . " registro criminal" . PHP_EOL,
+                        date("H:i") . " registro criminal: " . $_SESSION["registro_pendiente"]["nombre"] . PHP_EOL,
                         FILE_APPEND
                     );
 
@@ -208,9 +208,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 </form>
 
     <hr>
-
+/
     <h2>Criminales registrados</h2>
     <?php
+    /*
     $conexion = conectar();
     $query = "SELECT * FROM criminales";
     $resultado = $conexion->query($query);
@@ -242,6 +243,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         <?php endforeach; ?>
     */
+        
     ?>
 </body>
 
