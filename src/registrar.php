@@ -13,7 +13,6 @@ if (!isset($_SESSION["usuario"]) || !isset($_SESSION["contra"])) {
 
 require_once __DIR__ . '/funciones/alertas.php';
 require_once __DIR__ . '/funciones/conect.php'; 
-require __DIR__ . '/ventanas/ventana_aviso.php';
 
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -123,7 +122,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <meta charset="UTF-8">
     <title>Registro de criminales</title>
      <!-- defer: el script se ejecuta cuando la página ya está cargada -->
-    <script src="../javascript.js" defer></script>
+    <script src="javascript.js" defer></script>
 </head>
 
 <body>
@@ -136,7 +135,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 -->
 
 
-    <form method="POST" action="">
+    
         
     <h1>Registrar criminal</h1>
 
