@@ -114,7 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <h2>Buscar por identificación</h2><br><br>
         <input type="number" name="buscar"><br>
         <?php if(!$mostrarConfirmacion){?>
-            <button type="submit" name="eliminar">Eliminar usuario</button>
+            <button type="submit" name="eliminar" id="boton_alerta">Eliminar usuario</button>
         <?php } else{?>
                 <p>¿Estás seguro de que quieres eliminar este usuario?</p>
 
@@ -130,6 +130,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <?php } ?>
 
     </form>
+    <script src="javascript.js"></script>
 </body>
 
 

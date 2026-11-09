@@ -15,16 +15,17 @@ if (!isset($_SESSION["usuario"]) || !isset($_SESSION["contra"])) {
 
 require_once __DIR__ . '/funciones/alertas.php';
 require_once __DIR__ . '/funciones/conect.php';
-
+$en = false;
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $buscar = strtoupper(trim($_POST["buscar"] ?? ""));
-    
+   
     if($buscar === "") {
         alerta_campo();
     } else {
         $en = false;
         $conexion = conectar();
         $resultados = obtener_criminales($conexion, $buscar);
+       
         $conexion->close();
 
         registrar_historial("Busqueda: " . $buscar);
@@ -79,7 +80,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <input type="text" name="buscar"><br>
         <button type="submit">Buscar</button>
     </form>
-    <?php if ($buscado): ?>
+    <?php if ($en): ?>
         <hr>
         <!-- Mostrar resultados de la búsqueda 
          Si el array de $resultado es 0 significa que no hay-->

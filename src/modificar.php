@@ -153,6 +153,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </button>
     </form>
     <?php endif; ?>
+    <script src="javascript.js"></script>
 </body>
 
 

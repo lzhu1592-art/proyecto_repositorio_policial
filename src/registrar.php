@@ -12,9 +12,9 @@ if (!isset($_SESSION["usuario"]) || !isset($_SESSION["contra"])) {
 }
 
 require_once __DIR__ . '/funciones/alertas.php';
-require_once __DIR__ . '/funciones/conect.php';
+require_once __DIR__ . '/funciones/conect.php'; 
+require __DIR__ . '/ventanas/ventana_aviso.php';
 
-$mostrarConfirmacion = false;
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
@@ -49,7 +49,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 "descripcion" => $descripcion
             ];
 
-            $mostrarConfirmacion = true;
         }
     }
 
@@ -123,6 +122,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <head>
     <meta charset="UTF-8">
     <title>Registro de criminales</title>
+     <!-- defer: el script se ejecuta cuando la página ya está cargada -->
+    <script src="../javascript.js" defer></script>
 </head>
 
 <body>
@@ -133,11 +134,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         porque estan obligados a estar rellenados
         Y se usa una _SESSION para guardar los datos temporalmente y usarlo en sql
 -->
-<?php if ($mostrarConfirmacion): ?>
 
-    <?php alerta_confirmacion(); ?>
-
-<?php else: ?>
 
     <form method="POST" action="">
         
@@ -164,12 +161,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <textarea id="descripcion" name="descripcion" required></textarea>
         <br><br>
 
-        <button type="submit" name="registrar">
+        <button type="submit" id="boton_alerta">
             Registrar
         </button>
     </form>
 
-<?php endif; ?>
 
 <!--
 </form>
@@ -212,7 +208,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     */
         
     ?>
+    
     -->
+
 </body>
 
 </html>
