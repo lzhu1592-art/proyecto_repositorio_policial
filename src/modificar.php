@@ -50,7 +50,7 @@ require_once __DIR__ . '/funciones/conect.php';
 $confirmacion=false;
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     //Aqui digo: del boton con id "aceptar" si esta presionado, entonces la variable confirmacion es true
-    if(isset($_POST["modificar"])){
+    if(isset($_POST["aceptar_ventana_aviso"])){
        
         $buscar = strtoupper(trim($_POST["buscar"] ?? ""));
         $nombre=trim($_POST["nombre"] ??"");
@@ -148,7 +148,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <input type="text" name="contr" required><br>
         <h2>Cambiar rol</h2><br><br>
         <input type="text" name="rol" required><br><br>
-        <button type="submit" name="modificar">
+        <button type="submit" name="modificar" id="boton_alerta">
             Modificar
         </button>
     </form>

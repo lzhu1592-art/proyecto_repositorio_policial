@@ -23,3 +23,10 @@
 19:56 Crear usuario
 19:56 Crear usuario
 19:57 Crear usuario
+19:22 Busqueda: A12345678L
+19:42 Busqueda usuario
+19:43 Busqueda usuario
+19:43 Busqueda usuario
+19:44 Busqueda usuario
+19:44 Busqueda usuario
+19:44 Busqueda usuario

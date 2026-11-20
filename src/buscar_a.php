@@ -16,7 +16,7 @@ if (!isset($_SESSION["usuario"]) || !isset($_SESSION["contra"])) {
 require_once __DIR__ . '/funciones/conect.php';
 require_once __DIR__ . '/funciones/alertas.php';
 //require_once __DIR__ . '/funciones/bd.php';
-
+$resultado="";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $buscar = strtoupper(trim($_POST["buscar"] ?? ""));
     if($buscar == ""){
@@ -38,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $resultado = $stmt->get_result();
 
             
-           
+        
         }
     
 }
@@ -98,12 +98,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <input type="text" name="buscar"><br>
         <button type="submit">Buscar</button>
     </form>
-     <?php while ($fila = $resultado->fetch_assoc()): ?>
+    <?php if ($resultado !== null&& $resultado->num_rows>0): ?>
+       
+        <!--El < ?= es como poner  echo htmlspecialchars -->
+            <?php while ($fila = $resultado->fetch_assoc()): ?>
                 <h3><?= htmlspecialchars($fila["nombre_usuario"]) ?></h3>
-                <p>Contraseña: <?= htmlspecialchars($fila["contr"]) ?></p>
+                <p>ID: <?=  (int)$fila["id"] ?></p>
                 <p>Rol: <?= htmlspecialchars($fila["rol"]) ?></p>
                 <hr>
             <?php endwhile; ?>
+    <?php endif; ?>
+
 </body>
 
 

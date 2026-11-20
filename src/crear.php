@@ -164,7 +164,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <input type="text" id="rol" name="rol" required>
         <br><br>
 
-            <button type="submit" name="crear">Crear Usuario</button>
+            <button type="submit" name="crear" id="boton_alerta">Crear Usuario</button>
        
 
 

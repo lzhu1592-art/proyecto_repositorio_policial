@@ -12,8 +12,8 @@
     <?php   
         echo 
         '<form method="POST">
-            <button type="submit" name="aceptar">Sí, continuar</button>
-            <button type="submit" name="cancelar">No, cancelar</button>
+            <button type="submit" name="aceptar_ventana_aviso" onclick="window.close()">Sí, continuar</button>
+            <button type="submit" name="cancelar" onclick="window.close()">No, cancelar</button>
         </form>';
     ?>
 </body>

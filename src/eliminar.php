@@ -53,7 +53,7 @@ $mostrarConfirmacion=false;
 //Aqui directamente con la base de datos, no lo hize como si fuera localmente
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
       //Aqui digo: del boton con id "eliminar" si esta presionado, entonces la variable confirmacion es true
-    if(isset($_POST["eliminar"])){
+    if(isset($_POST["aceptar_ventana_aviso"])){
     
         $buscar = strtoupper(trim($_POST["buscar"] ?? ""));
         if ($buscar === "") {
@@ -113,21 +113,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <h2>Buscar por identificación</h2><br><br>
         <input type="number" name="buscar"><br>
-        <?php if(!$mostrarConfirmacion){?>
+        
             <button type="submit" name="eliminar" id="boton_alerta">Eliminar usuario</button>
-        <?php } else{?>
-                <p>¿Estás seguro de que quieres eliminar este usuario?</p>
-
-            <form method="POST">
-                <button type="submit" name="aceptar">
-                    Sí, continuar
-                </button>
-
-                <button type="submit" name="cancelar">
-                    No, cancelar
-                </button>
-            </form>
-<?php } ?>
+        
 
     </form>
     <script src="javascript.js"></script>

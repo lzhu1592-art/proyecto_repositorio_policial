@@ -18,7 +18,7 @@ require_once __DIR__ . '/funciones/conect.php';
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     // Paso 1: el usuario pulsa Registrar
-    if (isset($_POST["registrar"])) {
+    if (isset($_POST["aceptar_ventana_aviso"])) {
 
         $nombre = strtolower(trim($_POST["nombre"] ?? ""));
         $documento = strtoupper(trim($_POST["documento"] ?? ""));
