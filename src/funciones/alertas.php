@@ -62,7 +62,7 @@ function insertar_criminal($conexion, $datos)
 }
 
 //Esto sirve parabuscar un criminal en la base de datos, si no se pasa un documento, devuelve todos los criminales
-function obtener_criminales($conexion, $documento = "")
+function obtener_criminales($conexion, $documento)
 {
     $criminales = [];
 
@@ -93,5 +93,42 @@ function mostrar_criminal($criminal)
     echo "Documentación: " . htmlspecialchars($criminal["documento"]) . "<br>";
     echo "Delito: " . htmlspecialchars($criminal["delito"]) . "<br>";
     echo "Descripción del delito: " . htmlspecialchars($criminal["descripcion_delito"]) . "<br><br>";
+}
+
+function consultar($nombre,$contrasena){
+    $conexion = conectar();
+        if ($nombre === "" || $contrasena === "") {
+            alerta_campo();
+        } else{
+            $query = "SELECT * FROM usuarios WHERE nombre_usuario= ? AND contr=?";
+            $stmt = $conexion->prepare($query);
+            $stmt->bind_param("ss", $nombre, $contrasena);
+            $stmt->execute();
+            $resultado = $stmt->get_result();
+              if ($resultado->num_rows > 0) {
+                $_SESSION["usuario"]=$nombre;
+                $_SESSION["contra"]=$contrasena;
+                //Divido las filas en un array en $fila
+                $fila = $resultado->fetch_assoc();
+                $rol = $fila['rol'];
+                if ($rol === "administrador") {
+                    header("Location: usuarios/menu_administrador.php");
+                    exit;
+                } else if($rol==="policia"){
+                    header("Location:usuarios/menu_policia.php");
+                    exit;
+                }else{
+                    header("Location:usuarios/menu_invitado.php");
+                    exit;
+                }
+
+        } else {
+            $mensaje = "Usuario o contraseña incorrectos.";
+            echo $mensaje;
+        }
+        }
+      
+        $stmt->close();
+        $conexion->close();
 }
 ?>

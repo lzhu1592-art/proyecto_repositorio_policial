@@ -13,54 +13,10 @@ error_reporting(E_ALL);
         #El uso ?? "" es para poner de predeterminado nada
         $nombre = trim($_POST["nombre"] ?? "");
         $contrasena = $_POST["contrasena"] ?? "";
-
-        $conexion = conectar();
-        $query = "SELECT * FROM usuarios WHERE nombre_usuario= ? AND contr=?";
-        $stmt = $conexion->prepare($query);
-        $stmt->bind_param("ss", $nombre, $contrasena);
-        $stmt->execute();
-        $resultado = $stmt->get_result();
-        if ($nombre === "" || $contrasena === "") {
-            alerta_campo();
-        } elseif (
-            $resultado->num_rows > 0
-        ) {
-            
-            $_SESSION["usuario"]=$nombre;
-            $_SESSION["contra"]=$contrasena;
-            //Divido las filas en un array en $fila
-            $fila = $resultado->fetch_assoc();
-            $rol = $fila['rol'];
-            if ($rol === "administrador") {
-                header("Location: menu.php");
-                exit;
-            } else {
-                header("Location:menu_normal.php");
-                exit;
-            }
-
-        } else {
-            $mensaje = "Usuario o contraseña incorrectos.";
-            echo $mensaje;
-        }
-        $stmt->close();
-        $conexion->close();
+        consultar($nombre,$contrasena);
+       
     }
-    /* Aqui como si fuera localmente
-     // require_once __DIR__ . '/funciones/bd.php';
-        if (empty($nombre) || empty($contrasena)) {
-            alerta_campo();
-        } elseif (
-            isset($usuarios[$nombre]) &&
-            $usuarios[$nombre]["contrasena"] === $contrasena
-        ) {
-            $_SESSION["usuario"]=$nombre;
-            $_SESSION["contra"]=$contrasena;
-            header("Location: menu.php");
-        } else {
-            echo "Usuario o contraseña incorrectos";
-        }
-            */
+   
     ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -88,7 +44,23 @@ error_reporting(E_ALL);
     </form>
 
    
-
+<?php
+ /* Aqui como si fuera localmente
+     // require_once __DIR__ . '/funciones/bd.php';
+        if (empty($nombre) || empty($contrasena)) {
+            alerta_campo();
+        } elseif (
+            isset($usuarios[$nombre]) &&
+            $usuarios[$nombre]["contrasena"] === $contrasena
+        ) {
+            $_SESSION["usuario"]=$nombre;
+            $_SESSION["contra"]=$contrasena;
+            header("Location: menu.php");
+        } else {
+            echo "Usuario o contraseña incorrectos";
+        }
+            */
+?>
 
 </body>
 

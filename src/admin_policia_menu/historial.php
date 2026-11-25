@@ -19,17 +19,18 @@ if (!isset($_SESSION["usuario"]) || !isset($_SESSION["contra"])) {
 <head>
     <meta charset="UTF-8">
     <title>Historial de actividad</title>
+    <script src="../javascript.js" defer></script>
 </head>
 <body>
 
     <h1>Historial de actividad</h1>
 
-    <a href="menu.php">Volver al menú</a>
+    <a href="#"class="volver">Volver atrás</a>
 
     <hr>
 
     <?php
-        $archivo = __DIR__ . "/historial.txt";
+        $archivo = __DIR__ . "/../historial.txt";
     if (file_exists($archivo)) {
         $lineas = file($archivo, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 

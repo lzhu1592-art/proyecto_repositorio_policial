@@ -11,14 +11,14 @@ if (!isset($_SESSION["usuario"]) || !isset($_SESSION["contra"])) {
     exit;
 }
 
-require_once __DIR__ . '/funciones/alertas.php';
-require_once __DIR__ . '/funciones/conect.php'; 
+require_once __DIR__ . '/../funciones/conect.php';
+require_once __DIR__ . '/../funciones/alertas.php';
 
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-
-    // Paso 1: el usuario pulsa Registrar
-    if (isset($_POST["aceptar_ventana_aviso"])) {
+    $conexion = conectar();
+        // Paso 1: el usuario pulsa Registrar
+    if (isset($_POST["registrar"])) {
 
         $nombre = strtolower(trim($_POST["nombre"] ?? ""));
         $documento = strtoupper(trim($_POST["documento"] ?? ""));
@@ -50,17 +50,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         }
     }
-
+    if (isset($_POST["cancelar"])) {
     // Paso 2: el usuario cancela
-    elseif (isset($_POST["cancelar"])) {
 //En caso de cancelar la operación, eliminamos los datos de la sesión y mostramos un mensaje
         unset($_SESSION["registro_pendiente"]);
         echo "Has cancelado la operación.";
 
-    }
-
-    // Paso 3: el usuario confirma
-    elseif (isset($_POST["aceptar"])) {
+    }elseif (isset($_POST["aceptar_ventana_aviso"])) {// Paso 3: el usuario confirma
 
         if (isset($_SESSION["registro_pendiente"])) {
     //Aqui habiamos guardado datos como array en la sesion, entonces los recuperamos como array
@@ -71,10 +67,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $antecedente = $datos["antecedente"];
             $descripcion = $datos["descripcion"];
 
-            $conexion = conectar();
-
-//Aqui uso el -> para decir que si el $resultado  es num_rows(que es una variable predeterminada en php) es mayor a 0, entonces la persona ya existe 
-// y no se puede registrar
             if (existe_criminal($conexion, $documento)) {
 
                 alerta_repetido();
@@ -88,14 +80,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 }
             }
 
-            unset($_SESSION["registro_pendiente"]);
-            $conexion->close();
+            
 
         } else {
             echo "No hay ningún registro pendiente de confirmar.";
         }
+        unset($_SESSION["registro_pendiente"]);
+        $conexion->close();
     }
 
+
+    
+    
 /*
                 // Cargar los criminales iniciales al comenzar una sesión
                 Es decir que yo digo que si no existe una sesion de criminales me los creas
@@ -122,7 +118,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <meta charset="UTF-8">
     <title>Registro de criminales</title>
      <!-- defer: el script se ejecuta cuando la página ya está cargada -->
-    <script src="javascript.js" defer></script>
+    <script src="../javascript.js" defer></script>
 </head>
 
 <body>
@@ -139,8 +135,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         
     <h1>Registrar criminal</h1>
 
-    <a href="menu.php">Volver al menú</a>
-    <a href="funciones/cerrar.php">Cerrar sesion</a>
+    <a href="#"class="volver">Volver al menú</a>
+    <a href="../funciones/cerrar.php">Cerrar sesion</a>
     <br><br>
     <form method="POST" action="">
 
@@ -160,7 +156,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <textarea id="descripcion" name="descripcion" required></textarea>
         <br><br>
 
-        <button type="submit" id="boton_alerta">
+        <button type="submit" id="boton_alerta" name="registrar">
             Registrar
         </button>
     </form>

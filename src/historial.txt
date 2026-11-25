@@ -30,3 +30,6 @@
 19:44 Busqueda usuario
 19:44 Busqueda usuario
 19:44 Busqueda usuario
+19:47 Busqueda: <SCRIPT>     ALERT("HOLA, BUENOS DíAS"); </SCRIPT>
+19:50 Busqueda: "1==1"
+19:50 Busqueda: <SCRIPT>     ALERT("HOLA, BUENOS DíAS"); </SCRIPT>

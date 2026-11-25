@@ -13,40 +13,9 @@ if (!isset($_SESSION["usuario"]) || !isset($_SESSION["contra"])) {
     exit;
 }
 
-/*
-Aqui lo hare usando bd.php como base de datos
-session_start();
-require_once __DIR__ . '/funciones/alertas.php';
-require_once __DIR__ . '/funciones/bd.php';
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $buscar = strtoupper(trim($_POST["buscar"] ?? ""));
-    $nombre=trim($_POST["nombre"] ??"");
-    $contr=trim($_POST["contr"] ??"");
-    $rol=trim($_POST["rol"] ??"");
-   
-   
-    if ($buscar === "") {
-        alerta_campo();
-    } else {
-        $_SESSION["usuarios"][$buscar] = [
-            "nombre" => $nombre,
-            "contr" => $contr,
-            "rol" => $rol
-        ];
-         file_put_contents(
-        "historial.txt",
-        date("H:i") . " modificar usuario" . PHP_EOL,
-        FILE_APPEND | LOCK_EX
-
-        echo "Usuario modificado";
-    );
-    }
-
-*/
-
-require __DIR__ . '/funciones/alertas.php';
-require_once __DIR__ . '/funciones/conect.php';
+require __DIR__ . '/../funciones/conect.php';
+require_once __DIR__ . '/../funciones/alertas.php';
 $confirmacion=false;
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     //Aqui digo: del boton con id "aceptar" si esta presionado, entonces la variable confirmacion es true
@@ -121,10 +90,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modificar usuario</title>
+    <script src="../javascript.js" defer></script>
 </head>
 
 <body>
-    <a href="menu.php">Volver al menu</a>
+    <a href="#"class="volver">Volver al menu</a>
       <!-- Aqui al usar el php dentro del body
         evito que al pulsar los botonos de aceptar o cancelar, se vuelvan
         inservibles, ya que al pulsar el boton de registrar,  
@@ -156,6 +126,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <script src="javascript.js"></script>
 </body>
 
+<?php
+/*
+Aqui lo hare usando bd.php como base de datos
+session_start();
+require_once __DIR__ . '/funciones/alertas.php';
+require_once __DIR__ . '/funciones/bd.php';
 
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $buscar = strtoupper(trim($_POST["buscar"] ?? ""));
+    $nombre=trim($_POST["nombre"] ??"");
+    $contr=trim($_POST["contr"] ??"");
+    $rol=trim($_POST["rol"] ??"");
+   
+   
+    if ($buscar === "") {
+        alerta_campo();
+    } else {
+        $_SESSION["usuarios"][$buscar] = [
+            "nombre" => $nombre,
+            "contr" => $contr,
+            "rol" => $rol
+        ];
+         file_put_contents(
+        "historial.txt",
+        date("H:i") . " modificar usuario" . PHP_EOL,
+        FILE_APPEND | LOCK_EX
+
+        echo "Usuario modificado";
+    );
+    }
+
+*/
+
+?>
 
 </html>

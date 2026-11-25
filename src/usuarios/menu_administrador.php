@@ -18,14 +18,13 @@ if (!isset($_SESSION["usuario"]) || !isset($_SESSION["contra"])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion</title>
+    <title>Menu principal</title>
 </head>
 
-
 <body>
-    <a href="menu.php">Volver al menu</a>
-    <a href="funciones/cerrar.php">Cerrar sesion</a>
-    <div style="background-color:#eef1f5;  border: 1px solid black; >
+    
+    
+    <div style="background-color:#eef1f5;  border: 1px solid black; ">
         <table border="0">
            
                 <tr >
@@ -34,13 +33,19 @@ if (!isset($_SESSION["usuario"]) || !isset($_SESSION["contra"])) {
                     </td>
                 </tr>
             
-            <tr>
+           <tr>
                 <td>
-                    <p align="center">GESTIÓN</p>
-                    <p><a href="buscar_a.php"> Buscar usuario </a></p>
-                    <p><a href="crear.php"> Crear usuario </a></p>
-                    <p><a href="modificar.php">Modificar usuario</a> </p>
-                    <p><a href="eliminar.php">Eliminar usuario</a></p>
+                    <p align="center">MENÚ PRINCIPAL</p>
+
+                    <p><a href="../comun/buscar_criminales.php">Buscar criminal</a></p>
+
+                    <p><a href="../admin_policia_menu/registrar_criminal.php">Registrar criminal</a></p>
+
+                    <p><a href="../admin_policia_menu/historial.php">Historial de operaciones</a></p>
+
+                    <p><a href="../admin_policia_menu/gestion_usuario.php">Gestión de usuarios</a></p>
+
+                    <p><a href="../funciones/cerrar.php">Cerrar sesión</a></p>
                 </td>
             </tr>
 

@@ -23,7 +23,7 @@ if (!isset($_SESSION["usuario"]) || !isset($_SESSION["contra"])) {
 
 <body>
     
-    
+    <a href="../funciones/cerrar.php">Cerrar sesion</a>
     <div style="background-color:#eef1f5;  border: 1px solid black; ">
         <table border="0">
            
@@ -36,10 +36,9 @@ if (!isset($_SESSION["usuario"]) || !isset($_SESSION["contra"])) {
             <tr>
                 <td>
                     <p align="center">MENÚ PRINCIPAL</p>
-                    <p><a href="buscar.php"> Buscar persona </a></p>
-                    <p><a href="registrar.php"> Registrar persona </a></p>
-                    <p><a href="historial.php">Historial de operaciones</a> </p>
-                    <p><a href="gestion.php">Gestion de usuarios</a></p>
+                    <p><a href="../comun/buscar_criminales.php"> Buscar criminal </a></p>
+                    <p><a href="admin_policia_menu/registrar_criminal.php"> Registrar criminal </a></p>
+                    <p><a href="../admin_policia_menu/historial.php">Historial</a></p>
                     <p><a href="funciones/cerrar.php">Cerrar sesion</a></p>
                 </td>
             </tr>

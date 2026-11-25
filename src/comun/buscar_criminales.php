@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 session_start();
 
 // Evitar que el navegador guarde la página en caché
@@ -13,8 +16,8 @@ if (!isset($_SESSION["usuario"]) || !isset($_SESSION["contra"])) {
     exit;
 }
 
-require_once __DIR__ . '/funciones/alertas.php';
-require_once __DIR__ . '/funciones/conect.php';
+require_once __DIR__ . '/../funciones/alertas.php';
+require_once __DIR__ . '/../funciones/conect.php';
 $en = false;
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $buscar = strtoupper(trim($_POST["buscar"] ?? ""));
@@ -32,7 +35,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $en = true;
        
     }
-        /*
+        
+    
+}
+?>
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../javascript.js" defer></script>
+</head>
+<body>
+    <a href="#" class="volver">Volver atrás</a>
+    <a href="../funciones/cerrar.php">Cerrar sesion</a>
+    <form method="POST" action="">
+
+        <h2>Buscar por identificación</h2><br><br>
+        <input type="text" name="buscar"><br>
+        <button type="submit">Buscar</button>
+    </form>
+    <?php if ($en): ?>
+        <hr>
+        <!-- Mostrar resultados de la búsqueda 
+         Si el array de $resultado es 0 significa que no hay-->
+        <?php if (count($resultados) === 0): ?>
+            <p style="color:red;">No se ha encontrado ninguna persona con ese documento.</p>
+        <?php else: ?>
+            <p>Resultados encontrados: <?= count($resultados) ?></p>
+        <!--Aqui uso un foreach para recorre una array-->
+            <?php foreach ($resultados as $criminal): ?>
+                <?php mostrar_criminal($criminal); ?>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    <?php endif; ?>
+   
+</body>
+
+<?php
+/*
+Base de datos locales
       
             require_once __DIR__ . '/funciones/bd.php';
 
@@ -59,43 +102,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 echo "No se ha encontrado la persona";
             }
                 */
-    
-}
-?>
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-
-<body>
-    <a href="menu.php">Volver al menu</a>
-    <a href="funciones/cerrar.php">Cerrar sesion</a>
-    <form method="POST" action="">
-
-        <h2>Buscar por identificación</h2><br><br>
-        <input type="text" name="buscar"><br>
-        <button type="submit">Buscar</button>
-    </form>
-    <?php if ($en): ?>
-        <hr>
-        <!-- Mostrar resultados de la búsqueda 
-         Si el array de $resultado es 0 significa que no hay-->
-        <?php if (count($resultados) === 0): ?>
-            <p style="color:red;">No se ha encontrado ninguna persona con ese documento.</p>
-        <?php else: ?>
-            <p>Resultados encontrados: <?= count($resultados) ?></p>
-        <!--Aqui uso un foreach para recorre una array-->
-            <?php foreach ($resultados as $criminal): ?>
-                <?php mostrar_criminal($criminal); ?>
-            <?php endforeach; ?>
-        <?php endif; ?>
-    <?php endif; ?>
-</body>
-
-
+                ?>
 
 </html>

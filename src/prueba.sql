@@ -5,9 +5,9 @@ CREATE TABLE usuarios(
     rol ENUM('administrador','invitado', 'policia')
 );
 INSERT INTO usuarios (nombre_usuario,contr,rol)
-VALUES("admin","123","administrador"),
-("policia1","1234","policia"),
-("invitado1","12345","invitado");
+VALUES("admin","admin","administrador"),
+("policia1","policia1","policia"),
+("invitado1","invitado1","invitado");
 
 CREATE TABLE criminales(
     id_criminales INT AUTO_INCREMENT PRIMARY KEY,
@@ -18,5 +18,5 @@ CREATE TABLE criminales(
 
 INSERT INTO criminales (nombre_criminal,delito,descripcion_delito,documento)
 VALUES
-("juan","Robo","Robo a mano armada","123X"),
-("Pepita","Prostitución infantil","Unos de los socios de Epstein","12345Z");
+("Pedro","Malversacion de fondos,Contratos buitres,Corrupcion","Malversacion de fondos,Contratos buitres,COrrupcion","01181099A"),
+("Auso","Prostitución infantil","Obligar a menores de edad a hacer contenido sexual","12345612G");

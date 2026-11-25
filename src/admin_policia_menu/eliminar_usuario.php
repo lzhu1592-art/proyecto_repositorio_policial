@@ -13,44 +13,10 @@ if (!isset($_SESSION["usuario"]) || !isset($_SESSION["contra"])) {
     exit;
 }
 
-//Aqui se hace de manera local usando bd.php
-/*
-require_once __DIR__ . '/funciones/alertas.php';
-require_once __DIR__ . '/funciones/bd.php';
-// Cargar los usuarios iniciales al comenzar una sesión
-if (!isset($_SESSION["usuarios"])) {
-    $_SESSION["usuarios"] = $usuarios;
-}
-
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-
-    $nombre = strtolower(trim($_POST["buscar"] ?? ""));
-
-    // Comprobar que se ha elegido un usuario
-    if ($nombre === "") {
-        alerta_campo();
-    } elseif (!isset($_SESSION["usuarios"][$nombre])) {
-        echo "<p>El usuario no existe.</p>";
-    } elseif ($nombre === strtolower($_SESSION["usuario"])) {
-        echo "<p>No puedes eliminar el usuario con el que has iniciado sesión.</p>";
-    } else {
-        unset($_SESSION["usuarios"][$nombre]);
-
-        file_put_contents(
-            __DIR__ . "/historial.txt",
-            date("H:i") . " Eliminar usuario: " . $nombre . PHP_EOL,
-            FILE_APPEND
-        );
-
-        echo "<p>Usuario eliminado correctamente.</p>";
-    }
-}
-*/
-
-require_once __DIR__ . '/funciones/alertas.php';
-require_once __DIR__ . '/funciones/conect.php';
+require_once __DIR__ . '/../funciones/conect.php';
+require_once __DIR__ . '/../funciones/alertas.php';
 $mostrarConfirmacion=false;
-//Aqui directamente con la base de datos, no lo hize como si fuera localmente
+//Aqui directamente con la base de datos de xampp
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
       //Aqui digo: del boton con id "eliminar" si esta presionado, entonces la variable confirmacion es true
     if(isset($_POST["aceptar_ventana_aviso"])){
@@ -121,6 +87,40 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <script src="javascript.js"></script>
 </body>
 
+<?php
+//Aqui se hace de manera local usando bd.php
+/*
+require_once __DIR__ . '/funciones/alertas.php';
+require_once __DIR__ . '/funciones/bd.php';
+// Cargar los usuarios iniciales al comenzar una sesión
+if (!isset($_SESSION["usuarios"])) {
+    $_SESSION["usuarios"] = $usuarios;
+}
 
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+
+    $nombre = strtolower(trim($_POST["buscar"] ?? ""));
+
+    // Comprobar que se ha elegido un usuario
+    if ($nombre === "") {
+        alerta_campo();
+    } elseif (!isset($_SESSION["usuarios"][$nombre])) {
+        echo "<p>El usuario no existe.</p>";
+    } elseif ($nombre === strtolower($_SESSION["usuario"])) {
+        echo "<p>No puedes eliminar el usuario con el que has iniciado sesión.</p>";
+    } else {
+        unset($_SESSION["usuarios"][$nombre]);
+
+        file_put_contents(
+            __DIR__ . "/historial.txt",
+            date("H:i") . " Eliminar usuario: " . $nombre . PHP_EOL,
+            FILE_APPEND
+        );
+
+        echo "<p>Usuario eliminado correctamente.</p>";
+    }
+}
+*/
+?>
 
 </html>

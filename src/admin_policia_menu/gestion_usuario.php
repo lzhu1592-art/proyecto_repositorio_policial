@@ -18,14 +18,15 @@ if (!isset($_SESSION["usuario"]) || !isset($_SESSION["contra"])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu principal</title>
+    <title>Gestion</title>
 </head>
 
+
 <body>
-    
-    <a href="funciones/cerrar.php">Cerrar sesion</a>
-    <div style="background-color:#eef1f5;  border: 1px solid black; ">
-        <table border="0">
+    <a href="../usuarios/menu_administrador.php">Volver al menu</a>
+    <a href="../funciones/cerrar.php">Cerrar sesion</a>
+    <div style="background-color: #eef1f5; border: 1px solid black;">
+    <table border="0">
            
                 <tr >
                     <td width="550px">
@@ -35,11 +36,11 @@ if (!isset($_SESSION["usuario"]) || !isset($_SESSION["contra"])) {
             
             <tr>
                 <td>
-                    <p align="center">MENÚ PRINCIPAL</p>
-                    <p><a href="buscar.php"> Buscar persona </a></p>
-                    <p><a href="registrar.php"> Registrar persona </a></p>
-                    <p><a href="historial.php">Historial de operaciones</a> </p>
-                    <p><a href="cerrar.php">Cerrar sesion</a></p>
+                    <p align="center">GESTIÓN</p>
+                    <p><a href="./buscar_usuario.php"> Buscar usuario </a></p>
+                    <p><a href="./crear_usuario.php"> Crear usuario </a></p>
+                    <p><a href="./modificar_usuario.php">Modificar usuario</a> </p>
+                    <p><a href="./eliminar_usuario.php">Eliminar usuario</a></p>
                 </td>
             </tr>
 

@@ -13,43 +13,9 @@ if (!isset($_SESSION["usuario"]) || !isset($_SESSION["contra"])) {
     exit;
 }
 
-require_once __DIR__ . '/funciones/alertas.php';
-require_once __DIR__ . '/funciones/conect.php';
-/*
-// Cargar los usuarios iniciales al comenzar una sesión
-require_once __DIR__ . '/funciones/bd.php';
-if (!isset($_SESSION["usuarios"])) {
-    $_SESSION["usuarios"] = $usuarios;
-}
-    if ($_SERVER["REQUEST_METHOD"] === "POST") {
+require_once __DIR__ . '/../funciones/conect.php';
+require_once __DIR__ . '/../funciones/alertas.php';
 
-    $nombre = strtolower(trim($_POST["nombre"] ?? ""));
-    $contr = strtoupper(trim($_POST["contr"] ?? ""));
-    $rol = trim($_POST["rol"] ?? "");
-//El file_put_contents sirve para escribir en un archibo.txt
-    file_put_contents(
-    "historial.txt",
-    date("H:i") . " Crear usuario: " . $_SESSION["registro_pendiente"]["nombre"] . PHP_EOL,
-    FILE_APPEND | LOCK_EX
-);
-    // Comprobar que todos los campos estén completos
-    if (
-        $nombre === "" ||
-        $contr === "" ||
-        $rol === ""
-    ) {
-        alerta_campo();
-    }elseif (isset($_SESSION["usuarios"][$nombre])) {
-        echo "<p>Ya existe un usuario con ese nombre.</p>";
-    } else {
-        $_SESSION["usuarios"][$nombre] = [
-            "contr" => $contr,
-            "rol"   => $rol
-        ];
-        echo "<p>Usuario creado correctamente.</p>";
-    }
-}
-*/
 //LLamo a la function cuando necesite algo
 $mostrarConfirmacion=false;
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -138,6 +104,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <head>
     <meta charset="UTF-8">
     <title>Crear usuarios</title>
+    <script src="../javascript.js" defer></script>
 </head>
 <body>
     <?php if ($mostrarConfirmacion): ?>
@@ -148,7 +115,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     <h1>Crear Usuarios</h1>
 
-    <a href="menu.php">Volver al menú</a>
+    <a href="#" class="volver">Volver al menú</a>
 
     <form method="POST" action="">
 
@@ -172,4 +139,42 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <?php endif; ?>
 <script src="javascript.js"></script>
 </body>
+<?php 
+/*
+Esto es base de datos localmente
+// Cargar los usuarios iniciales al comenzar una sesión
+require_once __DIR__ . '/funciones/bd.php';
+if (!isset($_SESSION["usuarios"])) {
+    $_SESSION["usuarios"] = $usuarios;
+}
+    if ($_SERVER["REQUEST_METHOD"] === "POST") {
+
+    $nombre = strtolower(trim($_POST["nombre"] ?? ""));
+    $contr = strtoupper(trim($_POST["contr"] ?? ""));
+    $rol = trim($_POST["rol"] ?? "");
+//El file_put_contents sirve para escribir en un archibo.txt
+    file_put_contents(
+    "historial.txt",
+    date("H:i") . " Crear usuario: " . $_SESSION["registro_pendiente"]["nombre"] . PHP_EOL,
+    FILE_APPEND | LOCK_EX
+);
+    // Comprobar que todos los campos estén completos
+    if (
+        $nombre === "" ||
+        $contr === "" ||
+        $rol === ""
+    ) {
+        alerta_campo();
+    }elseif (isset($_SESSION["usuarios"][$nombre])) {
+        echo "<p>Ya existe un usuario con ese nombre.</p>";
+    } else {
+        $_SESSION["usuarios"][$nombre] = [
+            "contr" => $contr,
+            "rol"   => $rol
+        ];
+        echo "<p>Usuario creado correctamente.</p>";
+    }
+}
+*/
+?>
 </html>
