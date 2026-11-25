@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Error al iniciar sesión</title>
 </head>
 <body>
     <h1>Error al iniciar sesion, vuelva a iniciar</h1>

@@ -16,15 +16,6 @@ function alerta_repetido() {
     echo "<p style='color:red;'>Esa persona ya existe, en caso de añadir nuevo delito, debe modificarlo.</p>";
 }
 
-# Confirmación antes de registrar
-function alerta_confirmacion() {
-    echo '<p>Confirma tu selección</p>';
-
-    echo '<form method="POST">
-        <button type="submit" name="aceptar">Sí, continuar</button>
-        <button type="submit" name="cancelar">No, cancelar</button>
-    </form>';
-}
 //Aqui pongo una funcion para registrar en el historial, ya que se repite en varios archivos
 function registrar_historial($accion)
 {
@@ -41,6 +32,28 @@ function existe_criminal($conexion, $documento)
     $stmt->close();
 
     return $existe;
+}
+function modificar_criminal($conexion,$datos){
+$sql = "UPDATE criminales 
+        SET nombre_criminal = ?, 
+            delito = ?, 
+            descripcion_delito = ?
+        WHERE documento = ?";
+
+$stmt = $conexion->prepare($sql);
+
+$stmt->bind_param(
+    "ssss",
+    $datos["nombre"],
+    $datos["antecedente"],
+    $datos["descripcion"],
+    $datos["documento"]
+);
+
+$stmt->execute();
+
+$stmt->close();
+
 }
 //Funcion para insertar un criminal en la base de datos
 function insertar_criminal($conexion, $datos)
@@ -61,7 +74,7 @@ function insertar_criminal($conexion, $datos)
     return $correcto;
 }
 
-//Esto sirve parabuscar un criminal en la base de datos, si no se pasa un documento, devuelve todos los criminales
+//Buscar criminales
 function obtener_criminales($conexion, $documento)
 {
     $criminales = [];
@@ -95,7 +108,7 @@ function mostrar_criminal($criminal)
     echo "Descripción del delito: " . htmlspecialchars($criminal["descripcion_delito"]) . "<br><br>";
 }
 
-function consultar($nombre,$contrasena){
+function consultar_inicio_sesion($nombre,$contrasena){
     $conexion = conectar();
         if ($nombre === "" || $contrasena === "") {
             alerta_campo();
@@ -131,4 +144,32 @@ function consultar($nombre,$contrasena){
         $stmt->close();
         $conexion->close();
 }
+
+//Usuarios:
+
+
+function crear_usuario($conexion,$datos){
+    $guardar="INSERT INTO usuarios (nombre_usuario,contr,rol) VALUES(?,?,?)";
+        $stmt=$conexion->prepare($guardar);
+        //Se debe poner el tipo (string, int ) por cada variable        
+        $stmt->bind_param("sss", $datos["nombre"],$datos["contr"],$datos["rol"]);   
+        if($stmt->execute()){
+            //El file_put_contents sirve para escribir en un archibo.txt
+                file_put_contents(
+                "historial.txt",
+                date("H:i") . " Crear usuario: " . $_SESSION["registro_pendiente"]["nombre"] . PHP_EOL,
+                FILE_APPEND 
+            );
+                echo "Usuario creado correctamente.<br><br>";
+                    unset($_SESSION["registro_pendiente"]);
+                }else{
+                    echo "Error al guardar los datos.<br><br>";
+                    unset($_SESSION["registro_pendiente"]);
+                }
+            }
+          
+        $stmt->close();
+        $conexion->close();
+
+
 ?>

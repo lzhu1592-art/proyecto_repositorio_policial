@@ -14,10 +14,15 @@ if (!isset($_SESSION["usuario"]) || !isset($_SESSION["contra"])) {
 require_once __DIR__ . '/../funciones/conect.php';
 require_once __DIR__ . '/../funciones/alertas.php';
 
+// ======================================
+// PETICIONES POST
+// ======================================
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+
     $conexion = conectar();
-        // Paso 1: el usuario pulsa Registrar
+
+    // PASO 1: REGISTRAR
     if (isset($_POST["registrar"])) {
 
         $nombre = strtolower(trim($_POST["nombre"] ?? ""));
@@ -40,76 +45,100 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             formato();
 
         } else {
-            // Guardamos temporalmente los datos para confirmar
+
+            // Guardamos los datos temporalmente
             $_SESSION["registro_pendiente"] = [
                 "nombre" => $nombre,
                 "documento" => $documento,
                 "antecedente" => $antecedente,
                 "descripcion" => $descripcion
             ];
+             $datos = $_SESSION["registro_pendiente"];
 
-        }
-    }
-    if (isset($_POST["cancelar"])) {
-    // Paso 2: el usuario cancela
-//En caso de cancelar la operación, eliminamos los datos de la sesión y mostramos un mensaje
-        unset($_SESSION["registro_pendiente"]);
-        echo "Has cancelado la operación.";
-
-    }elseif (isset($_POST["aceptar_ventana_aviso"])) {// Paso 3: el usuario confirma
-
-        if (isset($_SESSION["registro_pendiente"])) {
-    //Aqui habiamos guardado datos como array en la sesion, entonces los recuperamos como array
-            $datos = $_SESSION["registro_pendiente"];
-    //Dividmos el array en variables simples para usarlo en la consulta SQL
-            $nombre = $datos["nombre"];
-            $documento = $datos["documento"];
-            $antecedente = $datos["antecedente"];
-            $descripcion = $datos["descripcion"];
-
-            if (existe_criminal($conexion, $documento)) {
+            if (existe_criminal($conexion, $datos["documento"])) {
 
                 alerta_repetido();
 
-            } elseif( insertar_criminal($conexion, $datos)) {
+            } elseif (insertar_criminal($conexion, $datos)) {
+
+                registrar_historial(
+                    "registro criminal: " . $datos["nombre"]
+                );
+
                 echo "Datos guardados correctamente.";
-                registrar_historial("registro criminal: " . $datos["nombre"]);
-                
-                } else {
-                    echo "Error al guardar los datos.";
-                }
+
+            } else {
+
+                echo "Error al guardar los datos.";
             }
 
+            unset($_SESSION["registro_pendiente"]);
+
             
+        }
+    }
+/*
+    // PASO 2: CONFIRMAR
+    elseif (isset($_POST["aceptar_ventana_aviso"])) {
+
+        if (isset($_SESSION["registro_pendiente"])) {
+
+            $datos = $_SESSION["registro_pendiente"];
+
+            if (existe_criminal($conexion, $datos["documento"])) {
+
+                alerta_repetido();
+
+            } elseif (insertar_criminal($conexion, $datos)) {
+
+                registrar_historial(
+                    "registro criminal: " . $datos["nombre"]
+                );
+
+                echo "Datos guardados correctamente.";
+
+            } else {
+
+                echo "Error al guardar los datos.";
+            }
+
+            unset($_SESSION["registro_pendiente"]);
 
         } else {
+
             echo "No hay ningún registro pendiente de confirmar.";
         }
-        unset($_SESSION["registro_pendiente"]);
-        $conexion->close();
     }
 
+    // PASO 3: CANCELAR
+    elseif (isset($_POST["cancelar"])) {
 
-    
-    
+        unset($_SESSION["registro_pendiente"]);
+
+        echo "Has cancelado la operación.";
+    }
+*/
+    $conexion->close();
+}
+
+// ======================================
+// RESPUESTA A FETCH
+// ======================================
+
+// Si la petición viene de la ventana emergente,
+// devolvemos una respuesta sin mostrar el HTML.
 /*
-                // Cargar los criminales iniciales al comenzar una sesión
-                Es decir que yo digo que si no existe una sesion de criminales me los creas
-                    if (!isset($_SESSION["criminales"])) {
-                        $_SESSION["criminales"] = $criminales;
-                    }
-                */
-                /* // Guardar temporalmente en la sesión
-                PARA GUARDARLO Y ESCRIBIRLO PERO AL CERRAR SESION SE BORRA TODO
-                $_SESSION["criminales"][$nombre] = [
-                    "documento" => $documento,
-                    "antecedente" => $antecedente,
-                    "descripcion" => $descripcion
-                ];
-        */   
+if (
+    $_SERVER["REQUEST_METHOD"] === "POST" &&
+    (
+        isset($_POST["aceptar_ventana_aviso"]) ||
+        isset($_POST["cancelar"])
+    )
+) {
+    exit;
+}
+    */
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="es">
@@ -117,95 +146,41 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <head>
     <meta charset="UTF-8">
     <title>Registro de criminales</title>
-     <!-- defer: el script se ejecuta cuando la página ya está cargada -->
     <script src="../javascript.js" defer></script>
 </head>
 
 <body>
-       <!-- Aqui al usar el php dentro del body
-        evito que al pulsar los botonos de aceptar o cancelar, se vuelvan
-        inservibles, ya que al pulsar el boton de registrar,  
-        se muestra los botones de confirmar pero se vacia el formulario, entonces al pulsar aceptar o cancelar, no se puede hacer nada
-        porque estan obligados a estar rellenados
-        Y se usa una _SESSION para guardar los datos temporalmente y usarlo en sql
--->
 
+<h1>Registrar criminal</h1>
 
-    
-        
-    <h1>Registrar criminal</h1>
+<a href="#" class="volver">Volver al menú</a>
+<a href="../funciones/cerrar.php">Cerrar sesión</a>
 
-    <a href="#"class="volver">Volver al menú</a>
-    <a href="../funciones/cerrar.php">Cerrar sesion</a>
+<br><br>
+
+<form method="POST" action="">
+
+    <label for="nombre">Nombre:</label>
+    <input type="text" id="nombre" name="nombre" required>
     <br><br>
-    <form method="POST" action="">
 
-        <label for="nombre">Nombre:</label>
-        <input type="text" id="nombre" name="nombre" required>
-        <br><br>
+    <label for="documento">Documento:</label>
+    <input type="text" id="documento" name="documento" required>
+    <br><br>
 
-        <label for="documento">Documento:</label>
-        <input type="text" id="documento" name="documento" required>
-        <br><br>
+    <label for="antecedente">Antecedente:</label>
+    <textarea id="antecedente" name="antecedente" required></textarea>
+    <br><br>
 
-        <label for="antecedente">Antecedente:</label>
-        <textarea id="antecedente" name="antecedente" required></textarea>
-        <br><br>
+    <label for="descripcion">Descripción:</label>
+    <textarea id="descripcion" name="descripcion" required></textarea>
+    <br><br>
 
-        <label for="descripcion">Descripción:</label>
-        <textarea id="descripcion" name="descripcion" required></textarea>
-        <br><br>
+    <button type="submit" id="boton_alerta" name="registrar">
+        Registrar
+    </button>
 
-        <button type="submit" id="boton_alerta" name="registrar">
-            Registrar
-        </button>
-    </form>
-
-
-<!--
 </form>
 
-    <hr>
-/
-    <h2>Criminales registrados</h2>
-    <?php
-    /*
-    $conexion = conectar();
-    $query = "SELECT * FROM criminales";
-    $resultado = $conexion->query($query);
-    while ($fila = $resultado->fetch_assoc()) {
-        echo "Nombre: " . $fila["nombre_criminal"] . "<br>";
-        echo "Documentacion: " . $fila["documento"] . "<br>";
-        echo "Delito: " . $fila["delito"] . "<br>";
-        echo "Descripcion del delito: " . $fila["descripcion_delito"] . "<br><br><br>";
-    }
-    ;
-    ?>
-
-    <?php
-
-    /*
-    Aqui estoy diciendo qu de la session guardada me lo muestre
-
-      <?php foreach ($_SESSION["criminales"] as $nombre => $datos): ?>
-
-            <h3><?= htmlspecialchars($nombre) ?></h3>
-
-            <p>Documento: <?= htmlspecialchars($datos["documento"]) ?></p>
-
-            <p>Antecedente: <?= htmlspecialchars($datos["antecedente"]) ?></p>
-
-            <p>Descripción: <?= htmlspecialchars($datos["descripcion"]) ?></p>
-
-            <hr>
-
-        <?php endforeach; ?>
-    */
-        
-    ?>
-    
-    -->
-
 </body>
-
 </html>

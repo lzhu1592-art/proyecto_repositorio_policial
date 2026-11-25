@@ -47,55 +47,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
         
         
-    }
-    if(isset($_POST["aceptar"])){
+    
+   
         if(isset($_SESSION["registro_pendiente"])) {
             $datos = $_SESSION["registro_pendiente"];
-            $nombre = $datos["nombre"];
-            $contr = $datos["contr"];
-            $rol = $datos["rol"];
+            
         }
 
-         $conectar2=conectar();
-            $guardar="SELECT * FROM usuarios WHERE nombre_usuario=?";
-            $stmt=$conectar2->prepare("$guardar");
-            //Se debe poner el tipo (string, int ) por cada variable        
-            $stmt->bind_param("s", $nombre);
-            $stmt->execute();
-            $resultado=$stmt->get_result();
-              if ($resultado->num_rows > 0) {
-
-                alerta_repetido();
-
-            } else {
-                
-                $sql="INSERT INTO usuarios(nombre_usuario,contr,rol) 
-            VALUES(?,?,?)";
-                $stmt=$conectar2->prepare("$sql");
-                //Se debe poner el tipo (string, int ) por cada variable        
-                $stmt->bind_param("sss", $nombre,$contr,$rol);
-                    if($stmt->execute()){
-                        //El file_put_contents sirve para escribir en un archibo.txt
-                        file_put_contents(
-                        "historial.txt",
-                        date("H:i") . " Crear usuario: " . $_SESSION["registro_pendiente"]["nombre"] . PHP_EOL,
-                        FILE_APPEND 
-                    );
-                     echo "Usuario creado correctamente.<br><br>";
-                     unset($_SESSION["registro_pendiente"]);
-                }else{
-                    echo "Error al guardar los datos.<br><br>";
-                    unset($_SESSION["registro_pendiente"]);
-                }
-            }
-          
-        $stmt->close();
-        $conectar2->close();
-    }elseif(isset($_POST["cancelar"])){
-        echo "Has cancelado la operacion";
+            
     }
-        
-}
+}     
+
 ?>
 
 

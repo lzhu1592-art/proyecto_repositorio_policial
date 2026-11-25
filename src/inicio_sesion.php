@@ -13,7 +13,7 @@ error_reporting(E_ALL);
         #El uso ?? "" es para poner de predeterminado nada
         $nombre = trim($_POST["nombre"] ?? "");
         $contrasena = $_POST["contrasena"] ?? "";
-        consultar($nombre,$contrasena);
+        consultar_inicio_sesion($nombre,$contrasena);
        
     }
    
