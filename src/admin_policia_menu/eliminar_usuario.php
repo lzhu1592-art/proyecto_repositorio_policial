@@ -15,11 +15,11 @@ if (!isset($_SESSION["usuario"]) || !isset($_SESSION["contra"])) {
 
 require_once __DIR__ . '/../funciones/conect.php';
 require_once __DIR__ . '/../funciones/alertas.php';
-$mostrarConfirmacion=false;
+
 //Aqui directamente con la base de datos de xampp
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
       //Aqui digo: del boton con id "eliminar" si esta presionado, entonces la variable confirmacion es true
-    if(isset($_POST["aceptar_ventana_aviso"])){
+    
     
         $buscar = strtoupper(trim($_POST["buscar"] ?? ""));
         if ($buscar === "") {
@@ -27,40 +27,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else{
             $_SESSION["buscar_usuario"] = (int)$buscar;
         }
-        $mostrarConfirmacion=true;
-
-    }elseif(isset($_POST["cancelar"])){
-        
-        echo "Has cancelado la operacion";
-    }elseif(isset($_POST["aceptar"])){
-        
         $conexion = conectar();
-       
-        $sql = "DELETE FROM usuarios WHERE id=?";
-        $stmt = $conexion->prepare($sql);
-        $stmt->bind_param("i", $_SESSION["buscar_usuario"]);
-        if ($stmt->execute()) {
-
-                if ($stmt->affected_rows > 0) {
-
-                    echo"Usuario eliminado correctamente.<br><br>";
-
-                    file_put_contents(
-                        __DIR__ . "/historial.txt",
-                        date("H:i") . " Eliminación de usuario ID: "
-                        . $_SESSION["buscar_usuario"] . PHP_EOL,
-                        FILE_APPEND | LOCK_EX
-                    );
-
-                } else {
-                    echo "No se encontró ningún usuario con ese ID.<br><br>";
-                }
-
-            } else {
-                echo "Error al eliminar el usuario.<br><br>";
-            }
-    }
-        
+        eliminar_usuario($conexion,$buscar);
+        $conexion->close();
 }
 
 ?>
@@ -74,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 
 <body>
-    <a href="menu.php">Volver al menu</a>
+    <a href="#" class="volver">Volver al menu</a>
     <form method="POST" action="">
 
         <h2>Buscar por identificación</h2><br><br>

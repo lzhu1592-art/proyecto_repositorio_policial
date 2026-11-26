@@ -1,5 +1,6 @@
 
 <?php
+//Alertas
 
 # Alerta por campos vacíos
 function alerta_campo() {
@@ -22,6 +23,8 @@ function registrar_historial($accion)
     $linea = date("H:i") . " " . $accion . PHP_EOL;
     file_put_contents(__DIR__ . "/../historial.txt", $linea, FILE_APPEND | LOCK_EX);
 }
+//CRIMINALES
+
 //Funcion para verificar si un criminal ya existe en la base de datos
 function existe_criminal($conexion, $documento)
 {
@@ -33,6 +36,7 @@ function existe_criminal($conexion, $documento)
 
     return $existe;
 }
+//Modificar criminales
 function modificar_criminal($conexion,$datos){
 $sql = "UPDATE criminales 
         SET nombre_criminal = ?, 
@@ -73,7 +77,16 @@ function insertar_criminal($conexion, $datos)
 
     return $correcto;
 }
-
+//FUncion de eliminar criminales
+function eliminar_criminales($conexion,$datos)
+{
+    $sql ="DELETE FROM criminales WHERE=?";
+    $stmt = $conexion->prepare($sql);
+    $stmt ->bind_param("s",$datos["documento"]);
+    $correcto=$stmt->execute();
+    $stmt->close();
+    return $correcto;
+}
 //Buscar criminales
 function obtener_criminales($conexion, $documento)
 {
@@ -147,29 +160,92 @@ function consultar_inicio_sesion($nombre,$contrasena){
 
 //Usuarios:
 
+//Mostrar los datos de un usuario en la pantalla, usando htmlspecialchars para evitar inyecciones de código
 
+   function mostrar_usuario($resultado)
+{
+    while ($usuario = $resultado->fetch_assoc()) {
+
+        echo "Nombre: " . htmlspecialchars($usuario["nombre_usuario"]) . "<br>";
+        echo "ID: " . htmlspecialchars((string)$usuario["id"]) . "<br>";
+        echo "Rol: " . htmlspecialchars($usuario["rol"]) . "<br><br>";
+
+    }
+
+}
+//Creamos usuarios
 function crear_usuario($conexion,$datos){
     $guardar="INSERT INTO usuarios (nombre_usuario,contr,rol) VALUES(?,?,?)";
         $stmt=$conexion->prepare($guardar);
         //Se debe poner el tipo (string, int ) por cada variable        
         $stmt->bind_param("sss", $datos["nombre"],$datos["contr"],$datos["rol"]);   
         if($stmt->execute()){
-            //El file_put_contents sirve para escribir en un archibo.txt
-                file_put_contents(
-                "historial.txt",
-                date("H:i") . " Crear usuario: " . $_SESSION["registro_pendiente"]["nombre"] . PHP_EOL,
-                FILE_APPEND 
+            $stmt->close();
+            return true ;       
+        }else{
+            $stmt->close();
+            return false;
+        }
+                
+    }
+
+//Creamos buscar usuarios
+        
+function buscar_usuarios($conexion,$nombre){
+     $sql = "SELECT * FROM usuarios WHERE nombre_usuario=?";
+        $stmt = $conexion->prepare($sql);
+        $stmt->bind_param("s", $nombre);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        file_put_contents(
+        "historial.txt",
+        date("H:i") . " Busqueda usuario" . PHP_EOL,
+        FILE_APPEND | LOCK_EX
+        );
+        $stmt->close();
+        return $resultado;
+}
+//Eliminar usuario
+function eliminar_usuario($conexion,$datos){
+    $sql ="DELETE FROM usuarios WHERE  id=?";
+    $stmt=$conexion->prepare($sql);
+    $stmt->bind_param("i",$datos["id"]);
+     if ($stmt->affected_rows > 0) {
+            echo"Usuario eliminado correctamente.<br><br>";
+
+            file_put_contents(
+                __DIR__ . "/historial.txt",
+                date("H:i") . " Eliminación de usuario ID: "
+                . $_SESSION["buscar_usuario"] . PHP_EOL,
+                FILE_APPEND | LOCK_EX
             );
-                echo "Usuario creado correctamente.<br><br>";
+            $stmt->close();
+
+        } else {
+            echo "No se encontró ningún usuario con ese ID.<br><br>";
+            $stmt->close();
+        }
+}
+
+//Modificar usuario
+function modificar_usuario($conexion,$datos){
+ $sql = "UPDATE usuarios SET nombre_usuario=?,contr=?,rol=? WHERE id=?";
+            $stmt = $conexion->prepare($sql);
+            $stmt->bind_param("sssi", $nombre,$contr,$rol,$buscar);
+                if($stmt->execute()){
+                    
+                    echo "Usuario modificado";
+
+                    file_put_contents(
+                        "historial.txt",
+                        date("H:i") . " modificar usuario: " . $_SESSION["registro_pendiente"]["nombre"] . PHP_EOL,
+                        FILE_APPEND | LOCK_EX
+                    );
                     unset($_SESSION["registro_pendiente"]);
                 }else{
-                    echo "Error al guardar los datos.<br><br>";
-                    unset($_SESSION["registro_pendiente"]);
+                    echo "Error al modificar el usuario: " . $stmt->error;
                 }
-            }
-          
-        $stmt->close();
-        $conexion->close();
-
+            $stmt->close();    
+}
 
 ?>

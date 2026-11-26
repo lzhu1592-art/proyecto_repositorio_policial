@@ -39,6 +39,7 @@ if (!isset($_SESSION["usuario"]) || !isset($_SESSION["contra"])) {
                     <p><a href="../comun/buscar_criminales.php"> Buscar criminal </a></p>
                     <p><a href="admin_policia_menu/registrar_criminal.php"> Registrar criminal </a></p>
                     <p><a href="admin_policia_menu/modificar_criminal.php"> Modificar criminal</a></p>
+                    <p><a href="admin_policia_menu/eliminar_criminal.php"> Eliminar criminal</a></p>
                     <p><a href="../admin_policia_menu/historial.php">Historial</a></p>
                     <p><a href="funciones/cerrar.php">Cerrar sesion</a></p>
                 </td>

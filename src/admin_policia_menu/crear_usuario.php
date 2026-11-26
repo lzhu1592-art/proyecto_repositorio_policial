@@ -17,10 +17,11 @@ require_once __DIR__ . '/../funciones/conect.php';
 require_once __DIR__ . '/../funciones/alertas.php';
 
 //LLamo a la function cuando necesite algo
-$mostrarConfirmacion=false;
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
   //Aqui digo: del boton con id "aceptar" si esta presionado, entonces la variable confirmacion es true
     if(isset($_POST["crear"])){
+        $conectar=conectar();
         $nombre = strtolower(trim($_POST["nombre"] ?? ""));
         $contr = strtoupper(trim($_POST["contr"] ?? ""));
         $rol = trim($_POST["rol"] ?? "");
@@ -43,14 +44,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 "contr" => $contr,
                 "rol" => $rol
             ];
-            $mostrarConfirmacion=true;
+            
         }
         
-        
-    
    
         if(isset($_SESSION["registro_pendiente"])) {
             $datos = $_SESSION["registro_pendiente"];
+            if(crear_usuario($conectar,$datos)){
+                 //El file_put_contents sirve para escribir en un archibo.txt
+                file_put_contents(
+                "historial.txt",
+                date("H:i") . " Crear usuario: " . $_SESSION["registro_pendiente"]["nombre"] . PHP_EOL,
+                FILE_APPEND);
+                echo "Usuario creado correctamente.<br><br>";
+                unset($_SESSION["registro_pendiente"]);
+            }else{
+                echo "Error al guardar los datos.<br><br>";
+                unset($_SESSION["registro_pendiente"]);
+            }
             
         }
 

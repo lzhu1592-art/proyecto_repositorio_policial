@@ -16,68 +16,36 @@ if (!isset($_SESSION["usuario"]) || !isset($_SESSION["contra"])) {
 
 require __DIR__ . '/../funciones/conect.php';
 require_once __DIR__ . '/../funciones/alertas.php';
-$confirmacion=false;
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     //Aqui digo: del boton con id "aceptar" si esta presionado, entonces la variable confirmacion es true
-    if(isset($_POST["aceptar_ventana_aviso"])){
+   
        
         $buscar = strtoupper(trim($_POST["buscar"] ?? ""));
         $nombre=trim($_POST["nombre"] ??"");
         $contr=trim($_POST["contr"] ??"");
         $rol=trim($_POST["rol"] ??"");
         if ($buscar === "" || $nombre === "" || $contr === "" || $rol === "") {
-                alerta_campo();
+            alerta_campo();
                 
         } else{
-         //GUardamos los datos en la sesion para usarlos en sql
+         //Guardamos los datos en la sesion para usarlos en sql
         $_SESSION["registro_pendiente"] = [
             "nombre" => $nombre, 
             "contr" => $contr,
             "rol" => $rol,
             "buscar" => $buscar
         ];
-        
-        $confirmacion=true;   
         }
-        
-
-    }elseif(isset($_POST["cancelar"])){
-
-        unset($_SESSION["registro_pendiente"]);
-        echo "Has cancelado la operación.";
-
-    }elseif(isset($_POST["aceptar"])){
+   
         if(isset($_SESSION["registro_pendiente"]))
-
-            $datos = $_SESSION["registro_pendiente"];
-            $nombre = $datos["nombre"];
-            $contr = $datos["contr"];
-            $rol = $datos["rol"];
-            $buscar = $datos["buscar"];
-
-
+            $datos=$_SESSION["registro_pendiente"];
             $conexion = conectar();
+                modificar_usuario($conexion,$datos);
             
-            $sql = "UPDATE usuarios SET nombre_usuario=?,contr=?,rol=? WHERE id=?";
-            $stmt = $conexion->prepare($sql);
-            $stmt->bind_param("sssi", $nombre,$contr,$rol,$buscar);
-                if($stmt->execute()){
-                    
-                    echo "Usuario modificado";
-
-                    file_put_contents(
-                        "historial.txt",
-                        date("H:i") . " modificar usuario: " . $_SESSION["registro_pendiente"]["nombre"] . PHP_EOL,
-                        FILE_APPEND | LOCK_EX
-                    );
-                    unset($_SESSION["registro_pendiente"]);
-                }else{
-                    echo "Error al modificar el usuario: " . $stmt->error;
-                }
-            $stmt->close();
             $conexion->close();
-        }           
-    }     
+}           
+    
 
         
     

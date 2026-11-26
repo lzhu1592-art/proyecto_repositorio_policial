@@ -27,7 +27,7 @@ if (!isset($_SESSION["usuario"]) || !isset($_SESSION["contra"])) {
     <div style="background-color:#eef1f5;  border: 1px solid black; ">
         <table border="0">
            
-                <tr >
+                <tr>
                     <td width="550px">
                         <h2>REGISTRO POLICIAL CRIMINAL</h2>
                     </td>
@@ -38,13 +38,11 @@ if (!isset($_SESSION["usuario"]) || !isset($_SESSION["contra"])) {
                     <p align="center">MENÚ PRINCIPAL</p>
 
                     <p><a href="../comun/buscar_criminales.php">Buscar criminal</a></p>
-
                     <p><a href="../admin_policia_menu/registrar_criminal.php">Registrar criminal</a></p>
-
+                    <p><a href="../admin_policia_menu/modificar_criminal.php"> Modificar criminal</a></p>
+                    <p><a href="../admin_policia_menu/eliminar_criminal.php"> Eliminar criminal</a></p>
                     <p><a href="../admin_policia_menu/historial.php">Historial de operaciones</a></p>
-
                     <p><a href="../admin_policia_menu/gestion_usuario.php">Gestión de usuarios</a></p>
-
                     <p><a href="../funciones/cerrar.php">Cerrar sesión</a></p>
                 </td>
             </tr>

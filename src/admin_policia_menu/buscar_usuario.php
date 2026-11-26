@@ -16,7 +16,7 @@ if (!isset($_SESSION["usuario"]) || !isset($_SESSION["contra"])) {
 require_once __DIR__ . '/../funciones/conect.php';
 require_once __DIR__ . '/../funciones/alertas.php';
 //require_once __DIR__ . '/funciones/bd.php';
-$resultado="";
+$resultado=null;
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $buscar = strtoupper(trim($_POST["buscar"] ?? ""));
     if($buscar == ""){
@@ -24,19 +24,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }else{
         $conexion = conectar();
 
-        file_put_contents(
-            "historial.txt",
-            date("H:i") . " Busqueda usuario" . PHP_EOL,
-            FILE_APPEND | LOCK_EX
-        );
-
-        $sql = "SELECT * FROM usuarios WHERE id=?";
-        $stmt = $conexion->prepare($sql);
-        $stmt->bind_param("i", $buscar);
-        $stmt->execute();
-        $resultado = $stmt->get_result();
-        
-        }
+        $resultado=buscar_usuarios($conexion,$buscar);
+    }
     
 }
     
@@ -59,19 +48,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <form method="POST" action="">
 
-        <h2>Buscar por ID/Nombre</h2><br><br>
+        <h2>Buscar por Nombre</h2><br><br>
         <input type="text" name="buscar"><br>
         <button type="submit">Buscar</button>
     </form>
     <?php if ($resultado !== null&& $resultado->num_rows>0): ?>
        
-        <!--El < ?= es como poner  echo htmlspecialchars -->
-            <?php while ($fila = $resultado->fetch_assoc()): ?>
-                <h3><?= htmlspecialchars($fila["nombre_usuario"]) ?></h3>
-                <p>ID: <?=  (int)$fila["id"] ?></p>
-                <p>Rol: <?= htmlspecialchars($fila["rol"]) ?></p>
-                <hr>
-            <?php endwhile; ?>
+        <?php mostrar_usuario($resultado);?>
+    
     <?php endif; ?>
 
 </body>
